@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_7" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<lib name="gdx-1.9.8.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/gdx-1.9.8.jar!/"/>
+	</lib>
+	<lib name="gdx-backend-lwjgl-1.9.8.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/gdx-backend-lwjgl-1.9.8.jar!/"/>
+	</lib>
+	<lib name="gdx-platform-1.9.8-natives-desktop.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/gdx-platform-1.9.8-natives-desktop.jar!/"/>
+	</lib>
+	<lib name="jinput-2.0.5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jinput-2.0.5.jar!/"/>
+	</lib>
+	<lib name="jinput-platform-2.0.5-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jinput-platform-2.0.5-natives-linux.jar!/"/>
+	</lib>
+	<lib name="jinput-platform-2.0.5-natives-osx.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jinput-platform-2.0.5-natives-osx.jar!/"/>
+	</lib>
+	<lib name="jinput-platform-2.0.5-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jinput-platform-2.0.5-natives-windows.jar!/"/>
+	</lib>
+	<lib name="jlayer-1.0.1-gdx.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jlayer-1.0.1-gdx.jar!/"/>
+	</lib>
+	<lib name="jorbis-0.0.17.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jorbis-0.0.17.jar!/"/>
+	</lib>
+	<lib name="jutils-1.0.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jutils-1.0.0.jar!/"/>
+	</lib>
+	<lib name="log4j-api-2.11.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/log4j-api-2.11.0.jar!/"/>
+	</lib>
+	<lib name="log4j-core-2.11.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/log4j-core-2.11.0.jar!/"/>
+	</lib>
+	<lib name="lwjgl_util-2.9.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl_util-2.9.2.jar!/"/>
+	</lib>
+	<lib name="lwjgl-2.9.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-2.9.2.jar!/"/>
+	</lib>
+	<lib name="lwjgl-platform-2.9.2-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-platform-2.9.2-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-platform-2.9.2-natives-osx.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-platform-2.9.2-natives-osx.jar!/"/>
+	</lib>
+	<lib name="lwjgl-platform-2.9.2-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-platform-2.9.2-natives-windows.jar!/"/>
+	</lib>
+	<levels>
+		<level name="lib" value="project"/>
+	</levels>
+</component>
