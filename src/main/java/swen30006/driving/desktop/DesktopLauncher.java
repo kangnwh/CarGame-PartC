@@ -10,6 +10,5 @@ public class DesktopLauncher {
 		config.backgroundFPS = 0;
 		config.foregroundFPS = 0;
 		new LwjglApplication(new Simulation(arg), config);
-		System.out.println("test");
 	}
 }
