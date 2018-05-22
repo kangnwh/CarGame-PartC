@@ -4,9 +4,7 @@ import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

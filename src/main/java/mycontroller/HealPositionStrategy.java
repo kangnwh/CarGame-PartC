@@ -3,7 +3,6 @@ package mycontroller;
 import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
-import world.Car;
 
 public class HealPositionStrategy implements INextPositionStrategy {
     public Coordinate getNextPosition(MapRecorder mapRecorder, MyAIController myAIController){

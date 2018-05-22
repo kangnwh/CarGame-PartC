@@ -1,9 +1,7 @@
 package mycontroller;
 
-import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
-import world.Car;
 import world.World;
 
 public class ExplorePositionStragegy implements INextPositionStrategy{
