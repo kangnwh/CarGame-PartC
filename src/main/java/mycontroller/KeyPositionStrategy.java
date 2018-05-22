@@ -6,7 +6,7 @@ import tiles.MapTile;
 import utilities.Coordinate;
 
 public class KeyPositionStrategy implements INextPositionStrategy {
-    public Coordinate getNextPosition(MapRecorder mapRecorder,int key){
-        return mapRecorder.getKey(key);
+    public Coordinate getNextPosition(MapRecorder mapRecorder,MyAIController myAIController){
+        return mapRecorder.getKey(myAIController.getKey()-1);
     }
 }

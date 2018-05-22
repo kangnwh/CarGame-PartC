@@ -6,12 +6,12 @@ import utilities.Coordinate;
 import world.Car;
 import world.World;
 
-public class ExplorePositionStragegy {
-    public Coordinate getNextPosition(MapRecorder mapRecorder, Car car){
+public class ExplorePositionStragegy implements INextPositionStrategy{
+    public Coordinate getNextPosition(MapRecorder mapRecorder, MyAIController myAIController){
         //Todo how to find a position for explore?
         MapTile[][] map=mapRecorder.getMap();
-        int currentX=Math.round(car.getX());
-        int currentY=Math.round(car.getY());
+        int currentX=Math.round(myAIController.getX());
+        int currentY=Math.round(myAIController.getY());
         int distance=Integer.MAX_VALUE;
         int exploreX=0;
         int exploreY=0;

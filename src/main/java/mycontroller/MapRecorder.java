@@ -111,6 +111,10 @@ public class MapRecorder {
 		return keys.get(key);
 	}
 
+	public boolean keyFounded(int key){
+		return keys.containsKey(key);
+	}
+
 	public HashMap<Coordinate, MapTile> getMapMatrix() {
 		return mapMatrix;
 	}

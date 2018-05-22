@@ -13,6 +13,7 @@ public class MyAIController extends CarController{
 //	private MyNavigateStrategy strategy ;
 	private MapRecorder mapRecorder;
 
+
 	public MyAIController(Car car) {
 		super(car);
 		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
@@ -70,5 +71,9 @@ public class MyAIController extends CarController{
 
 	private void updateCarStatus(){
 
+	}
+
+	public MapRecorder getMapRecorder() {
+		return mapRecorder;
 	}
 }
