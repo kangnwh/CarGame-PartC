@@ -10,13 +10,13 @@ import java.util.HashMap;
 
 
 public class MyAIController extends CarController{
-	private MyNavigateStrategy strategy ;
+//	private MyNavigateStrategy strategy ;
 	private MapRecorder mapRecorder;
 
 	public MyAIController(Car car) {
 		super(car);
 		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
-		strategy = new MyNavigateStrategy(co);
+//		strategy = new MyNavigateStrategy(co);
 		mapRecorder = new MapRecorder();
 		mapRecorder.addPointsByCarView(car.getView());
 	}
@@ -28,7 +28,7 @@ public class MyAIController extends CarController{
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-		Operation operation = strategy.getOperation(mapRecorder.getMap(),this);
+//		Operation operation = strategy.getOperation(mapRecorder.getMap(),this);
 	}
 
 	private void handleOperation(Operation operation){

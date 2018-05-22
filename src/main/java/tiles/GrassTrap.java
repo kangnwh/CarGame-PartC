@@ -13,6 +13,10 @@ public class GrassTrap extends TrapTile {
 		return true;
 	}
 	
+	public boolean canTurn(int a) {
+		return false;
+	}
+
 	public boolean canTurn() {
 		return false;
 	}

@@ -102,6 +102,7 @@ public class MapRecorder {
 	public void addKey(Coordinate co,MapTile tile){
 		keys.put(((LavaTrap)tile).getKey(),co);
 	}
+
 	public boolean isKey(MapTile tile){
 		return tile instanceof LavaTrap&&((LavaTrap) tile).getKey()>0;
 	}
@@ -110,5 +111,8 @@ public class MapRecorder {
 		return keys.get(key);
 	}
 
+	public HashMap<Coordinate, MapTile> getMapMatrix() {
+		return mapMatrix;
+	}
 
 }
