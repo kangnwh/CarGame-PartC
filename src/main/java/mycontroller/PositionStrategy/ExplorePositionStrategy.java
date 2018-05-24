@@ -29,8 +29,8 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
                 int tempDistance=(int)(Math.pow((currentX-i),2)+Math.pow((currentY-j),2));
                 if(map[i][j]==null&&tempDistance<distance&&World.getMap().get(new Coordinate(i,j)).isType(MapTile.Type.ROAD)){
                     distance=tempDistance;
-                    currentX=i;
-                    currentY=j;
+                    exploreX=i;
+                    exploreY=j;
                 }
             }
         }
