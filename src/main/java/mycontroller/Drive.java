@@ -2,10 +2,12 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PositionStrategy.NextPositionFactory;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
 
+import static mycontroller.MyAIController.MAX_HEALTH;
 import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOLD;
 
 public class Drive {
@@ -46,22 +48,30 @@ public class Drive {
 		if (coordinatesInPath.size() == 0) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 		}
-		printPathInfo();
+//		MyAIController.logger.info(String.format("Car position:({%3.2f},{%3.2f})",car.getX(),car.getY()));
+//		printPathInfo();
 		if (nextPosition == null || (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
 			nextPosition = coordinatesInPath.poll();
+			if(mapRecorder.isHealth(currentPosition) && car.getHealth() < MAX_HEALTH){
+				nextPosition = currentPosition;
+				return OperationType.BRAKE;
+			}
 		}
 
 
 		/* coordinates in a path must be adjacent */
 		OperationType result = OperationType.FORWARD_ACCE;
+		try {
+			if (Math.abs(nextPosition.x - car.getX()) > COORDINATE_DEVIATION) {
+				result = moveX(car, car.getX(), nextPosition);
 
-		if (Math.abs(nextPosition.x - car.getX()) > COORDINATE_DEVIATION ) {
-			result = moveX(car, car.getX(), nextPosition);
-
-		} else if (Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION ) {
-			result = moveY(car, car.getY(), nextPosition);
+			} else if (Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION) {
+				result = moveY(car, car.getY(), nextPosition);
+			}
+		}catch(Exception e){
+			MyAIController.logger.info(String.format("nextPosition:({%s})",nextPosition));
+			System.exit(-1);
 		}
-
 		if (mapRecorder.isLava(currentPosition)) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 			printPathInfo();

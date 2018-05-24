@@ -129,5 +129,14 @@ public class MapRecorder {
 
 	}
 
+	public boolean isHealth(Coordinate coordinate){
+		MapTile mapTile = mapMatrix.get(coordinate);
+		if(mapTile != null && mapTile instanceof HealthTrap){
+			return true;
+		}
+		return false;
+
+	}
+
 
 }

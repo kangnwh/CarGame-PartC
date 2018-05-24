@@ -24,6 +24,7 @@ public class MyAIController extends CarController {
 	private Drive drive;
 	private OperationType currentOperation;
 	private final float CAR_SPEED = 1.5f;
+	public static int MAX_HEALTH = 100;
 
 
 	public MyAIController(Car car) {
