@@ -13,7 +13,7 @@ public class Drive {
 	private LinkedList<Coordinate> coordinatesInPath;
 	private Coordinate targetPosition;
 	private Coordinate nextPosition;
-	private float COORDINATE_DEVIATION = 0.3f;
+	private float COORDINATE_DEVIATION = 0.4f;
 
 	public Drive(Coordinate initPosition) {
 		this.coordinatesInPath = new LinkedList<>();
@@ -24,45 +24,58 @@ public class Drive {
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
+
 		/* if reaches a targe position, a strategy should be applied to find next target position */
-//		if (targetPosition.equals(currentPosition)) {
 
-
-		if (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
+		if (Math.abs(targetPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(targetPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
 					getNextPosition(mapRecorder, car);
 		}
+
 		if (car.getHealth() <= HEALTH_THRESHOLD) {
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
+			coordinatesInPath.clear();
 		}
 
+		if (mapRecorder.isRecorded(targetPosition)){
+			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
+			coordinatesInPath.clear();
+		}
+
+
 		if (coordinatesInPath.size() == 0) {
+			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
+		}
+		printPathInfo();
+		if (nextPosition == null || (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
+			nextPosition = coordinatesInPath.poll();
+		}
+
+
+		/* coordinates in a path must be adjacent */
+		OperationType result = OperationType.FORWARD_ACCE;
+
+		if (Math.abs(nextPosition.x - car.getX()) > COORDINATE_DEVIATION ) {
+			result = moveX(car, car.getX(), nextPosition);
+
+		} else if (Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION ) {
+			result = moveY(car, car.getY(), nextPosition);
+		}
+
+		if (mapRecorder.isLava(currentPosition)) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 			printPathInfo();
 		}
 
-		if (nextPosition == null || nextPosition.equals(currentPosition)) {
-			nextPosition = coordinatesInPath.poll();
-		}
-
-		//TODO calculate operation to get to nextPositon
-
-		/* coordinates in a path must be adjacent */
-		OperationType result = OperationType.FORWARD_ACCE;
-		if (Math.abs(nextPosition.x - car.getX()) > COORDINATE_DEVIATION) {
-			result = moveX(car, car.getX(), nextPosition);
-
-		} else if (Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION) {
-			result = moveY(car, car.getY(), nextPosition);
-		}
-		MyAIController.logger.info(result);
+//		MyAIController.logger.info(result);
 		return result;
 
 	}
 
+
 	//TODO debug log print
 	private void printPathInfo() {
-		String log = "";
+		String log = String.format("Current:(%s) || Target:(%s) || ",nextPosition.toString(), targetPosition.toString());
 		for (Coordinate co : coordinatesInPath) {
 			log = log + "(" + co + ")" + ",";
 		}
@@ -70,8 +83,55 @@ public class Drive {
 
 	}
 
+	private OperationType turn(CarController car, float currentX, float currentY, Coordinate next) {
+		int targetX = next.x;
+		int targetY = next.y;
+		switch (car.getOrientation()) {
+			case EAST:
+				if (currentX < targetX) {
+					if (currentY < targetY) {
+						return OperationType.TURN_NORTH;
+					}
+					return OperationType.TURN_SOUTH;
+				} else {
+					return OperationType.TURN_WEST;
+				}
+			case WEST:
+				if (currentX > targetX) {
+					if (currentY < targetY) {
+						return OperationType.TURN_NORTH;
+					}
+					return OperationType.TURN_SOUTH;
+				} else {
+					return OperationType.TURN_EAST;
+				}
+			case NORTH:
+				if (currentY < targetY) {
+					if (currentX > targetX) {
+						return OperationType.TURN_WEST;
+					}
+					return OperationType.TURN_EAST;
+				} else {
+					return OperationType.TURN_SOUTH;
+				}
+			case SOUTH:
+				if (currentY > targetY) {
+					if (currentX > targetX) {
+						return OperationType.TURN_WEST;
+					}
+					return OperationType.TURN_EAST;
+				} else if (currentX <= targetX) {
+					return OperationType.TURN_NORTH;
+				}
+				break;
+			default:
+				return OperationType.FORWARD_ACCE;
+		}
+
+		return null;
+	}
+
 	private OperationType moveX(CarController car, float currentX, Coordinate next) {
-//		float currentX = x;
 		int targetX = next.x;
 		switch (car.getOrientation()) {
 			case EAST:

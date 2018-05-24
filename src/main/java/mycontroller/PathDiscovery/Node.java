@@ -6,10 +6,10 @@ import utilities.Coordinate;
 public class Node implements Comparable<Node>
 {
 
-	private Coordinate coordinate; // 坐标
-	private Node parent; // 父结点
-	private int G; // G：是个准确的值，是起点到当前结点的代价
-	private int H; // H：是个估值，当前结点到目的结点的估计代价
+	private Coordinate coordinate;
+	private Node parent;
+	private int G;
+	private int H;
 
 	public Node(int x, int y)
 	{
@@ -19,6 +19,7 @@ public class Node implements Comparable<Node>
 	public Node(Coordinate co)
 	{
 		this.coordinate = co;
+		this.parent = new Node(co.x,co.y);
 	}
 
 	public Node(Coordinate coord, Node parent, int g, int h)

@@ -15,7 +15,13 @@ import world.Car;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
-    public static final float HEALTH_THRESHOLD = 30.0f;
+    public static final float HEALTH_THRESHOLD = 50.0f;
+    private INextPositionStrategy explorePositionStrategy;
+
+    public HealPositionStrategy() {
+        this.explorePositionStrategy = new ExplorePositionStrategy();
+    }
+
     public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
         MapTile[][] map=mapRecorder.getMap();
         for(int i=0;i<map.length;i++){
@@ -25,7 +31,7 @@ public class HealPositionStrategy implements INextPositionStrategy {
                 }
             }
         }
-        return null;
+        return this.explorePositionStrategy.getNextPosition(mapRecorder,car);
     }
 
 }

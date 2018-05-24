@@ -87,6 +87,9 @@ public class MapRecorder {
 		return map;
 	}
 
+	public Boolean isRecorded(Coordinate coordinate) {
+		return mapMatrix.get(coordinate) != null;
+	}
 
 	public Coordinate getExit() {
 		return exit;
@@ -119,6 +122,15 @@ public class MapRecorder {
 
 	public boolean hasHealthTrap(){
 		return this.hasHealthTrap;
+	}
+
+	public boolean isLava(Coordinate coordinate){
+		MapTile mapTile = mapMatrix.get(coordinate);
+		if(mapTile != null && mapTile instanceof LavaTrap){
+			return true;
+		}
+		return false;
+
 	}
 
 
