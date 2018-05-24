@@ -38,20 +38,25 @@ public class Drive {
 		//TODO calculate operation to get to nextPositon
 
 		/* coordinates in a path must be adjacent */
+		OperationType result;
 		if (nextPosition.x != currentPosition.x) {
-			return moveX(car, currentPosition, nextPosition);
+			result = moveX(car, currentPosition, nextPosition);
 
 		} else {
-			return moveY(car, currentPosition, nextPosition);
+			result = moveY(car, currentPosition, nextPosition);
 		}
+		MyAIController.logger.info(result);
+		return result;
 
 	}
 
 	//TODO debug log print
 	private void printPathInfo() {
+		String log= "";
 		for (Coordinate co : coordinatesInPath) {
-			MyAIController.logger.info(co);
+			log = log + "("+ co+")" + ",";
 		}
+		MyAIController.logger.info(log);
 
 	}
 
@@ -95,7 +100,7 @@ public class Drive {
 			case EAST:
 			case WEST:
 				if (currentY > nextY) {
-					return OperationType.TURN_WEST;
+					return OperationType.TURN_SOUTH;
 				} else if (currentY <= nextY) {
 					return OperationType.TURN_NORTH;
 				}
