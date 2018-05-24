@@ -9,9 +9,7 @@ import java.util.Map;
 
 /**
  * MapRecorder
- * <p>
- * Author Ning Kang
- * Date 16/5/18
+ * This is used to record all coordinates that the car can see and generate a map for drive decision making
  */
 
 public class MapRecorder {

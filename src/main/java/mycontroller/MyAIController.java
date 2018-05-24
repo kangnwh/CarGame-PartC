@@ -4,10 +4,12 @@ import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
-
-
 import java.util.HashMap;
 
+/**
+ * Controller pattern applied here.
+ * This class is responsible for coordinate data from all other classes and give final command to the car.
+ */
 
 public class MyAIController extends CarController{
 //	private MyNavigateStrategy strategy ;

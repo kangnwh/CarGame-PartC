@@ -4,7 +4,13 @@ import tiles.MapTile;
 import utilities.Coordinate;
 import world.World;
 
-public class ExplorePositionStragegy implements INextPositionStrategy{
+/**
+ * This strategy is used to find the next unknown position (a position that has not been recorded in MapRecorder).
+ * This is used to make sure every "useful" coordinate can be discovered and recorded in MapRecorder.
+ *
+ */
+
+public class ExplorePositionStrategy implements INextPositionStrategy{
     public Coordinate getNextPosition(MapRecorder mapRecorder, MyAIController myAIController){
         //Todo how to find a position for explore?
         MapTile[][] map=mapRecorder.getMap();

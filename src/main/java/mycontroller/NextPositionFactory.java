@@ -15,7 +15,7 @@ public class NextPositionFactory {
             return new ExitPositionStrategy();
         }
         else{
-            return new ExplorePositionStragegy();
+            return new ExplorePositionStrategy();
         }
     }
 }
