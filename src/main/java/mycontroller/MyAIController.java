@@ -199,6 +199,7 @@ public class MyAIController extends CarController {
 				if (!getOrientation().equals(WorldSpatial.Direction.NORTH)) {
 					turnLeft(delta);
 				}
+				break;
 			case NORTH:
 				break;
 			case SOUTH:
