@@ -63,7 +63,7 @@ public class MyAIController extends CarController {
 					handleEast(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					handleOperation(delta);
+//					handleOperation(delta);
 				}
 				break;
 			case TURN_WEST:
@@ -71,7 +71,7 @@ public class MyAIController extends CarController {
 					handleWest(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					handleOperation(delta);
+//					handleOperation(delta);
 				}
 
 				break;
@@ -80,7 +80,7 @@ public class MyAIController extends CarController {
 					handleNorth(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					handleOperation(delta);
+//					handleOperation(delta);
 				}
 				break;
 			case TURN_SOUTH:
@@ -89,7 +89,7 @@ public class MyAIController extends CarController {
 
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					handleOperation(delta);
+//					handleOperation(delta);
 				}
 				break;
 			case BRAKE:
