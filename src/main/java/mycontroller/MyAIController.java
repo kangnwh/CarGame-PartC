@@ -5,7 +5,6 @@ import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
-import world.World;
 import world.WorldSpatial;
 
 import java.util.HashMap;
@@ -19,7 +18,7 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-//	private Path path;
+	//	private Path path;
 //	private LinkedList<Operation> operations;
 //	private Coordinate targetPosition;
 //	private LinkedList<Coordinate> coordinatesInPath;
@@ -29,13 +28,19 @@ public class MyAIController extends CarController {
 
 	public MyAIController(Car car) {
 		super(car);
-//		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
+		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
 		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
-		drive = new Drive();
-//		path=new Path();
+		//TODO for tesing
+//		drive = new Drive(co);
+		drive = new Drive(new Coordinate(6,5));
+
+//
+//
+// path=new Path();
 //		operations=new LinkedList<>();
 //		targetPosition=new Coordinate(this.getPosition());
 //		currentPosition=new Coordinate(this.getPosition());
+		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
 	@Override
@@ -45,12 +50,13 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-		if(getSpeed() < CAR_SPEED){
+		if (getSpeed() < CAR_SPEED) {
 			applyForwardAcceleration();
 		}
+		handleOperation(delta);
 
 //		this.turnLeft(delta);
-		this.handleNorth(this.getOrientation(),delta);
+//		this.handleNorth(this.getOrientation(),delta);
 
 
 //		currentPosition=new Coordinate(this.getPosition());
@@ -69,53 +75,56 @@ public class MyAIController extends CarController {
 
 		//TODO check whether currentOperation is done if not, adjust , if done, get another
 		/* Only turn operation need adjust based on car status/direction */
+
+	}
+
+	private void handleOperation(float delta) {
 		switch (currentOperation) {
 			case TURN_EAST:
-				if (this.getOrientation() == WorldSpatial.Direction.EAST) {
+				if (this.getOrientation() != WorldSpatial.Direction.EAST) {
+					handleEast(this.getOrientation(), delta);
+				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleEast(this.getOrientation(),delta);
+					handleOperation(delta);
 				}
-
 				break;
 			case TURN_WEST:
-				if (this.getOrientation() == WorldSpatial.Direction.WEST) {
+				if (this.getOrientation() != WorldSpatial.Direction.WEST) {
+					handleWest(this.getOrientation(), delta);
+				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleWest(this.getOrientation(),delta);
+					handleOperation(delta);
 				}
 
 				break;
 			case TURN_NORTH:
-				if (this.getOrientation() == WorldSpatial.Direction.NORTH) {
+				if (this.getOrientation() != WorldSpatial.Direction.NORTH) {
+					handleNorth(this.getOrientation(), delta);
+				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleNorth(this.getOrientation(),delta);
+					handleOperation(delta);
 				}
-
 				break;
 			case TURN_SOUTH:
-				if (this.getOrientation() == WorldSpatial.Direction.SOUTH) {
-					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleSouth(this.getOrientation(),delta);
-				}
+				if (this.getOrientation() != WorldSpatial.Direction.SOUTH) {
+					handleSouth(this.getOrientation(), delta);
 
+				} else {
+					currentOperation = drive.getOperation(mapRecorder, this);
+					handleOperation(delta);
+				}
 				break;
 			case BRAKE:
 				this.applyBrake();
-				break;
+//				break;
 			case FORWARD_ACCE:
 				this.applyForwardAcceleration();
-				break;
+//				break;
 			case REVERSE_ACCE:
 				this.applyReverseAcceleration();
-				break;
+//				break;
 			default:
+				currentOperation = drive.getOperation(mapRecorder, this);
 				break;
 
 
@@ -143,23 +152,22 @@ public class MyAIController extends CarController {
 //	}
 
 
-
-	private void handleEast(WorldSpatial.Direction orientation,float delta) {
-		switch(orientation){
+	private void handleEast(WorldSpatial.Direction orientation, float delta) {
+		switch (orientation) {
 			case EAST:
 				break;
 			case NORTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.EAST)) {
 					turnRight(delta);
 				}
 				break;
 			case SOUTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.EAST)) {
 					turnLeft(delta);
 				}
 				break;
 			case WEST:
-				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.EAST)) {
 					turnRight(delta);
 				}
 				break;
@@ -167,20 +175,20 @@ public class MyAIController extends CarController {
 
 	}
 
-	private void handleWest(WorldSpatial.Direction orientation,float delta) {
-		switch(orientation){
+	private void handleWest(WorldSpatial.Direction orientation, float delta) {
+		switch (orientation) {
 			case EAST:
-				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.WEST)) {
 					turnRight(delta);
 				}
 				break;
 			case NORTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.WEST)) {
 					turnLeft(delta);
 				}
 				break;
 			case SOUTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+				if (!getOrientation().equals(WorldSpatial.Direction.WEST)) {
 					turnRight(delta);
 				}
 				break;
@@ -189,43 +197,43 @@ public class MyAIController extends CarController {
 		}
 	}
 
-	private void handleNorth(WorldSpatial.Direction orientation,float delta) {
-		switch(orientation){
+	private void handleNorth(WorldSpatial.Direction orientation, float delta) {
+		switch (orientation) {
 			case EAST:
-				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.NORTH)) {
 					turnLeft(delta);
 				}
 			case NORTH:
 				break;
 			case SOUTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.NORTH)) {
 					turnLeft(delta);
 				}
 				break;
 			case WEST:
-				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.NORTH)) {
 					turnRight(delta);
 				}
 				break;
 		}
 	}
 
-	private void handleSouth(WorldSpatial.Direction orientation,float delta) {
-		switch(orientation){
+	private void handleSouth(WorldSpatial.Direction orientation, float delta) {
+		switch (orientation) {
 			case EAST:
-				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.SOUTH)) {
 					turnRight(delta);
 				}
 				break;
 			case NORTH:
-				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.SOUTH)) {
 					turnRight(delta);
 				}
 				break;
 			case SOUTH:
 				break;
 			case WEST:
-				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+				if (!getOrientation().equals(WorldSpatial.Direction.SOUTH)) {
 					turnLeft(delta);
 				}
 				break;

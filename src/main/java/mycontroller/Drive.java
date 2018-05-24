@@ -12,9 +12,10 @@ public class Drive {
 	private Coordinate targetPosition;
 	private Coordinate nextPosition;
 
-	public Drive() {
+	public Drive(Coordinate initPosition) {
 		this.coordinatesInPath = new LinkedList<>();
 		coordinatesInPath = new LinkedList<>();
+		targetPosition = initPosition;
 		coordinatesInPath.add(new Coordinate(3,3));
 		coordinatesInPath.add(new Coordinate(4,3));
 		coordinatesInPath.add(new Coordinate(5,3));
