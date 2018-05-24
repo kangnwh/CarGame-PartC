@@ -5,7 +5,6 @@ import mycontroller.MapRecorder;
 
 public class NextPositionFactory {
 
-
 	public static INextPositionStrategy chooseNextPositionStrategy(CarController car, MapRecorder mapRecorder) {
 		if (car.getHealth() < 30) {
 			return new HealPositionStrategy();
