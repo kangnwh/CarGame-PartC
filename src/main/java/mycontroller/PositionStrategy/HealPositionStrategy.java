@@ -15,6 +15,7 @@ import world.Car;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
+    public static final float HEALTH_THRESHOLD = 30.0f;
     public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
         MapTile[][] map=mapRecorder.getMap();
         for(int i=0;i<map.length;i++){
