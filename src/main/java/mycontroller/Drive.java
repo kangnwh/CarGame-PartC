@@ -17,6 +17,7 @@ public class Drive {
 	private Coordinate nextPosition;
 	private float COORDINATE_DEVIATION = 0.4f;
 
+
 	public Drive(Coordinate initPosition) {
 		this.coordinatesInPath = new LinkedList<>();
 		coordinatesInPath = new LinkedList<>();
@@ -34,30 +35,31 @@ public class Drive {
 					getNextPosition(mapRecorder, car);
 		}
 
+
+		/* health check interrupt */
 		if (car.getHealth() <= HEALTH_THRESHOLD) {
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
 			coordinatesInPath.clear();
 		}
 
-		if (mapRecorder.isRecorded(targetPosition)){
+		/* recorded check interrupt */
+		if (mapRecorder.isRecorded(targetPosition)) {
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
 			coordinatesInPath.clear();
 		}
 
-
 		if (coordinatesInPath.size() == 0) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 		}
-//		MyAIController.logger.info(String.format("Car position:({%3.2f},{%3.2f})",car.getX(),car.getY()));
-//		printPathInfo();
+
+
 		if (nextPosition == null || (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
 			nextPosition = coordinatesInPath.poll();
 			if(mapRecorder.isHealth(currentPosition) && car.getHealth() < MAX_HEALTH){
 				nextPosition = currentPosition;
-				return OperationType.BRAKE;
+				return car.getSpeed()>0 ? OperationType.BRAKE:OperationType.FORWARD_ACCE;
 			}
 		}
-
 
 		/* coordinates in a path must be adjacent */
 		OperationType result = OperationType.FORWARD_ACCE;
@@ -74,10 +76,8 @@ public class Drive {
 		}
 		if (mapRecorder.isLava(currentPosition)) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
-			printPathInfo();
 		}
 
-//		MyAIController.logger.info(result);
 		return result;
 
 	}

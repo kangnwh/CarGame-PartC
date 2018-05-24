@@ -20,11 +20,18 @@ import java.util.HashMap;
 public class MyAIController extends CarController {
 
 	public static Logger logger = LogManager.getFormatterLogger();
+	public static int MAX_HEALTH = 100;
+	public static int STUCK_TIMER = 10;
+
+	
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
 	private final float CAR_SPEED = 1.5f;
-	public static int MAX_HEALTH = 100;
+	private CarStatus lastStatus;
+	private int stuckTimer;
+
+
 
 
 	public MyAIController(Car car) {
@@ -42,15 +49,34 @@ public class MyAIController extends CarController {
 		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
+
 	@Override
 	public void update(float delta) {
 		// TODO Auto-generated method stub
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
+		if(stuckCheck() || stuckTimer >0){
+			applyReverseAcceleration();
+			stuckTimer--;
+		}else {
+			handleOperation(delta);
+			lastStatus = new CarStatus(this);
+		}
 
-		handleOperation(delta);
-
+	}
+	
+	private boolean stuckCheck(){
+		/* stuck interrupt */
+		if(lastStatus != null
+				&& lastStatus.getAngle() == this.getAngle()
+				&& lastStatus.getX() == this.getX()
+				&& lastStatus.getY() == this.getY()
+				&& lastStatus.getHealth() > this.getHealth()){
+			stuckTimer = STUCK_TIMER;
+			return true;
+		}
+		return false;
 	}
 
 	private void handleOperation(float delta) {
