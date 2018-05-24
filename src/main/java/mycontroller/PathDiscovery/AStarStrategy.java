@@ -20,11 +20,11 @@ public class AStarStrategy implements IDiscoveryStrategy {
 	public final static MapTile.Type PATH = null; // 路径
 	public final static int DIRECT_VALUE = 10; // 横竖移动代价
 
-	PriorityQueue<Node> openList; // 优先队列(升序)
-	ArrayList<Node> closeList;
-	LinkedList<Coordinate> pathList;
-	Node current;
-	Node target;
+	private PriorityQueue<Node> openList; // 优先队列(升序)
+	private ArrayList<Node> closeList;
+	private LinkedList<Coordinate> pathList;
+	private Node current;
+	private Node target;
 
 
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, MapTile[][] map) {
