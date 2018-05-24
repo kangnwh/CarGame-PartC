@@ -1,6 +1,7 @@
 package mycontroller;
 
 import mycontroller.PathDiscovery.IDiscoveryStrategy;
+import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -23,6 +24,7 @@ public class MapRecorder {
 	private Coordinate exit;
 	private HashMap<Integer, Coordinate> keys;
 	private IDiscoveryStrategy discoveryStrategy;
+	private Boolean hasHealthTrap;
 
 
 	public MapRecorder(IDiscoveryStrategy discoveryStrategy, HashMap<Coordinate, MapTile> roadMap) {
@@ -31,6 +33,7 @@ public class MapRecorder {
 		mapMatrix = new HashMap<>();
 		keys = new HashMap<>();
 		this.discoveryStrategy = discoveryStrategy;
+		hasHealthTrap=false;
 		for (Map.Entry<Coordinate, MapTile> entry : roadMap.entrySet()) {
 			Coordinate co = entry.getKey();
 			MapTile tile = entry.getValue();
@@ -66,6 +69,9 @@ public class MapRecorder {
 			MapTile tile = (MapTile) entry.getValue();
 			if (co.x > 0 && co.y > 0) {
 				this.addPoint(co, tile);
+			}
+			if(tile instanceof HealthTrap){
+				hasHealthTrap=true;
 			}
 		}
 	}
@@ -108,6 +114,10 @@ public class MapRecorder {
 
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target) {
 		return discoveryStrategy.findPath(current, target, getMap());
+	}
+
+	public boolean hasHealthTrap(){
+		return this.hasHealthTrap;
 	}
 
 
