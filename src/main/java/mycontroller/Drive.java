@@ -14,6 +14,13 @@ public class Drive {
 
 	public Drive() {
 		this.coordinatesInPath = new LinkedList<>();
+		coordinatesInPath = new LinkedList<>();
+		coordinatesInPath.add(new Coordinate(3,3));
+		coordinatesInPath.add(new Coordinate(4,3));
+		coordinatesInPath.add(new Coordinate(5,3));
+		coordinatesInPath.add(new Coordinate(6,3));
+		coordinatesInPath.add(new Coordinate(6,4));
+		coordinatesInPath.add(new Coordinate(6,5));
 	}
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
