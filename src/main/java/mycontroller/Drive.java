@@ -3,7 +3,6 @@ package mycontroller;
 import controller.CarController;
 import mycontroller.PositionStrategy.NextPositionFactory;
 import utilities.Coordinate;
-import world.Car;
 
 import java.util.LinkedList;
 
@@ -32,28 +31,25 @@ public class Drive {
 			printPathInfo();
 		}
 
-		if(nextPosition == null || nextPosition.equals(currentPosition)){
+		if (nextPosition == null || nextPosition.equals(currentPosition)) {
 			nextPosition = coordinatesInPath.poll();
 		}
-
-
-
 
 		//TODO calculate operation to get to nextPositon
 
 		/* coordinates in a path must be adjacent */
 		if (nextPosition.x != currentPosition.x) {
-			return moveX(car,currentPosition,nextPosition);
+			return moveX(car, currentPosition, nextPosition);
 
 		} else {
-			return moveY(car,currentPosition,nextPosition);
+			return moveY(car, currentPosition, nextPosition);
 		}
 
 	}
 
 	//TODO debug log print
-	private void printPathInfo(){
-		for(Coordinate co:coordinatesInPath){
+	private void printPathInfo() {
+		for (Coordinate co : coordinatesInPath) {
 			MyAIController.logger.info(co);
 		}
 
@@ -64,27 +60,29 @@ public class Drive {
 		int targetX = next.x;
 		switch (car.getOrientation()) {
 			case EAST:
-				if(currentX > targetX) {
+				if (currentX > targetX) {
 					return OperationType.TURN_WEST;
-				}else if(currentX < targetX){
+				} else if (currentX < targetX) {
 					return OperationType.FORWARD_ACCE;
 				}
 				break;
 			case WEST:
-				if(currentX > targetX) {
+				if (currentX > targetX) {
 					return OperationType.FORWARD_ACCE;
-				}else if(currentX < targetX){
+				} else if (currentX < targetX) {
 					return OperationType.TURN_EAST;
 				}
 				break;
 			case NORTH:
 			case SOUTH:
-				if(currentX > targetX) {
+				if (currentX > targetX) {
 					return OperationType.TURN_WEST;
-				}else if(currentX < targetX){
+				} else if (currentX <= targetX) {
 					return OperationType.TURN_EAST;
 				}
 				break;
+			default:
+				return OperationType.FORWARD_ACCE;
 		}
 
 		return null;
@@ -96,26 +94,28 @@ public class Drive {
 		switch (car.getOrientation()) {
 			case EAST:
 			case WEST:
-				if(currentY > nextY) {
+				if (currentY > nextY) {
 					return OperationType.TURN_WEST;
-				}else if(currentY < nextY){
+				} else if (currentY <= nextY) {
 					return OperationType.TURN_NORTH;
 				}
 				break;
 			case NORTH:
-				if(currentY > nextY) {
+				if (currentY > nextY) {
 					return OperationType.TURN_SOUTH;
-				}else if(currentY < nextY){
+				} else if (currentY < nextY) {
 					return OperationType.FORWARD_ACCE;
 				}
 				break;
 			case SOUTH:
-				if(currentY > nextY) {
+				if (currentY > nextY) {
 					return OperationType.FORWARD_ACCE;
-				}else if(currentY < nextY){
+				} else if (currentY < nextY) {
 					return OperationType.TURN_NORTH;
 				}
 				break;
+			default:
+				return OperationType.FORWARD_ACCE;
 		}
 
 		return null;
