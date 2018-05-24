@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 
 public class MyAIController extends CarController {
-//	private MapRecorder mapRecorder;
+	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
 //	private Path path;
@@ -29,7 +29,7 @@ public class MyAIController extends CarController {
 	public MyAIController(Car car) {
 		super(car);
 //		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
-		MapRecorder.getInstance().applyPathDiscoveryStrategy(new MyDiscoveryStrtegy());
+		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
 		drive = new Drive();
 //		path=new Path();
 //		operations=new LinkedList<>();
@@ -42,7 +42,7 @@ public class MyAIController extends CarController {
 		// TODO Auto-generated method stub
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
-		MapRecorder.getInstance().addPointsByCarView(currentView);
+		mapRecorder.addPointsByCarView(currentView);
 
 		if(getSpeed() < CAR_SPEED){
 			applyForwardAcceleration();
