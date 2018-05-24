@@ -1,6 +1,8 @@
 package mycontroller.PathDiscovery;
 
+import mycontroller.MapRecorder;
 import mycontroller.OperationType;
+import tiles.MapTile;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
@@ -13,5 +15,5 @@ import java.util.LinkedList;
  */
 
 public interface IDiscoveryStrategy {
-	LinkedList<Coordinate> findPath(Coordinate current, Coordinate target);
+	LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, MapTile[][] map);
 }

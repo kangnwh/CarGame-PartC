@@ -1,5 +1,6 @@
 package mycontroller.PathDiscovery;
 
+import tiles.MapTile;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 
 public class TestDiscoveryStrtegy implements IDiscoveryStrategy {
 	@Override
-	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target) {
+	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, MapTile[][] map) {
 		LinkedList<Coordinate> coordinatesInPath = new LinkedList<>();
 		coordinatesInPath.add(new Coordinate(3,3));
 		coordinatesInPath.add(new Coordinate(4,3));

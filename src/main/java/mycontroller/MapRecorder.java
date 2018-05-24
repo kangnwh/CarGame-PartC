@@ -126,7 +126,7 @@ public class MapRecorder {
 	}
 
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target){
-		return discoveryStrategy.findPath(current,target);
+		return discoveryStrategy.findPath(current,target,getMap());
 	}
 
 }

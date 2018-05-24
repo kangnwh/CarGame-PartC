@@ -1,6 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
+import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
 import mycontroller.PathDiscovery.TestDiscoveryStrtegy;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -26,9 +27,9 @@ public class MyAIController extends CarController {
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
 // 		drive = new Drive(co);
-// 		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
+ 		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy(),this.getMap());
 		//TODO for tesing
-		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
+//		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
 		drive = new Drive(new Coordinate(6,5));
 
 
