@@ -5,6 +5,7 @@ import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
+import world.World;
 import world.WorldSpatial;
 
 import java.util.HashMap;
@@ -68,57 +69,57 @@ public class MyAIController extends CarController {
 
 		//TODO check whether currentOperation is done if not, adjust , if done, get another
 		/* Only turn operation need adjust based on car status/direction */
-//		switch (currentOperation) {
-//			case TURN_EAST:
-//				if (this.getOrientation() == WorldSpatial.Direction.EAST) {
-//					currentOperation = drive.getOperation(mapRecorder, this);
-//					update(delta);
-//				}else{
-//					handleEast(delta);
-//				}
-//
-//				break;
-//			case TURN_WEST:
-//				if (this.getOrientation() == WorldSpatial.Direction.WEST) {
-//					currentOperation = drive.getOperation(mapRecorder, this);
-//					update(delta);
-//				}else{
-//					handleWest(delta);
-//				}
-//
-//				break;
-//			case TURN_NORTH:
-//				if (this.getOrientation() == WorldSpatial.Direction.NORTH) {
-//					currentOperation = drive.getOperation(mapRecorder, this);
-//					update(delta);
-//				}else{
-//					handleNorth(delta);
-//				}
-//
-//				break;
-//			case TURN_SOUTH:
-//				if (this.getOrientation() == WorldSpatial.Direction.SOUTH) {
-//					currentOperation = drive.getOperation(mapRecorder, this);
-//					update(delta);
-//				}else{
-//					handleSouth(delta);
-//				}
-//
-//				break;
-//			case BRAKE:
-//				this.applyBrake();
-//				break;
-//			case FORWARD_ACCE:
-//				this.applyForwardAcceleration();
-//				break;
-//			case REVERSE_ACCE:
-//				this.applyReverseAcceleration();
-//				break;
-//			default:
-//				break;
-//
-//
-//		}
+		switch (currentOperation) {
+			case TURN_EAST:
+				if (this.getOrientation() == WorldSpatial.Direction.EAST) {
+					currentOperation = drive.getOperation(mapRecorder, this);
+					update(delta);
+				}else{
+					handleEast(this.getOrientation(),delta);
+				}
+
+				break;
+			case TURN_WEST:
+				if (this.getOrientation() == WorldSpatial.Direction.WEST) {
+					currentOperation = drive.getOperation(mapRecorder, this);
+					update(delta);
+				}else{
+					handleWest(this.getOrientation(),delta);
+				}
+
+				break;
+			case TURN_NORTH:
+				if (this.getOrientation() == WorldSpatial.Direction.NORTH) {
+					currentOperation = drive.getOperation(mapRecorder, this);
+					update(delta);
+				}else{
+					handleNorth(this.getOrientation(),delta);
+				}
+
+				break;
+			case TURN_SOUTH:
+				if (this.getOrientation() == WorldSpatial.Direction.SOUTH) {
+					currentOperation = drive.getOperation(mapRecorder, this);
+					update(delta);
+				}else{
+					handleSouth(this.getOrientation(),delta);
+				}
+
+				break;
+			case BRAKE:
+				this.applyBrake();
+				break;
+			case FORWARD_ACCE:
+				this.applyForwardAcceleration();
+				break;
+			case REVERSE_ACCE:
+				this.applyReverseAcceleration();
+				break;
+			default:
+				break;
+
+
+		}
 	}
 
 //	private void handleOperation(Operation operation){
@@ -140,6 +141,7 @@ public class MyAIController extends CarController {
 //				break;
 //		}
 //	}
+
 
 
 	private void handleEast(WorldSpatial.Direction orientation,float delta) {
