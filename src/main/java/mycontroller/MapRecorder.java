@@ -48,12 +48,13 @@ public class MapRecorder {
 	}
 
 	public void addPoint(int x, int y, MapTile tile) {
+		if(x < xLength && y < yLength) {
+			Coordinate co = new Coordinate(x, y);
+			mapMatrix.put(co, tile);
 
-		Coordinate co = new Coordinate(x, y);
-		mapMatrix.put(co, tile);
-
-		if (isKey(tile)) {
-			addKey(co, tile);
+			if (isKey(tile)) {
+				addKey(co, tile);
+			}
 		}
 
 	}
