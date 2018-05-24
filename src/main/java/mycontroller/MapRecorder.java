@@ -15,7 +15,7 @@ import java.util.Map;
  */
 
 public class MapRecorder {
-	private static MapRecorder mapRecorder = new MapRecorder();
+
 	private HashMap<Coordinate, MapTile> mapMatrix;
 	private int xLength;
 	private int yLength;
@@ -26,7 +26,7 @@ public class MapRecorder {
 
 
 
-	private MapRecorder() {
+	public MapRecorder(IDiscoveryStrategy discoveryStrategy) {
 		xLength = 1;
 		yLength = 1;
 		exitFounded=false;
@@ -36,13 +36,6 @@ public class MapRecorder {
 		this.discoveryStrategy = discoveryStrategy;
 	}
 
-	public static MapRecorder getInstance(){
-		return mapRecorder;
-	}
-
-	public void applyPathDiscoveryStrategy(IDiscoveryStrategy discoveryStrategy){
-		this.discoveryStrategy = discoveryStrategy;
-	}
 
 	public boolean isExitFounded() {
 		return exitFounded;
