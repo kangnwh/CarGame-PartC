@@ -11,17 +11,20 @@ public class Drive {
 	private LinkedList<Coordinate> coordinatesInPath;
 	private Coordinate targetPosition;
 	private Coordinate nextPosition;
+	private float COORDINATE_DEVIATION = 0.3f;
 
 	public Drive(Coordinate initPosition) {
 		this.coordinatesInPath = new LinkedList<>();
 		coordinatesInPath = new LinkedList<>();
 		targetPosition = initPosition;
+		nextPosition = initPosition;
 	}
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round( car.getY()));
 		/* if reaches a targe position, a strategy should be applied to find next target position */
-		if (targetPosition.equals(currentPosition)) {
+//		if (targetPosition.equals(currentPosition)) {
+		 if (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION){
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
 					getNextPosition(mapRecorder, car);
 		}
@@ -38,12 +41,12 @@ public class Drive {
 		//TODO calculate operation to get to nextPositon
 
 		/* coordinates in a path must be adjacent */
-		OperationType result;
-		if (nextPosition.x != currentPosition.x) {
-			result = moveX(car, currentPosition, nextPosition);
+		OperationType result = OperationType.FORWARD_ACCE;
+		if (Math.abs(nextPosition.x - car.getX()) > COORDINATE_DEVIATION) {
+			result = moveX(car, car.getX(), nextPosition);
 
-		} else {
-			result = moveY(car, currentPosition, nextPosition);
+		} else if(Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION) {
+			result = moveY(car, car.getY(), nextPosition);
 		}
 		MyAIController.logger.info(result);
 		return result;
@@ -60,8 +63,8 @@ public class Drive {
 
 	}
 
-	private OperationType moveX(CarController car, Coordinate current, Coordinate next) {
-		int currentX = current.x;
+	private OperationType moveX(CarController car,float currentX, Coordinate next) {
+//		float currentX = x;
 		int targetX = next.x;
 		switch (car.getOrientation()) {
 			case EAST:
@@ -93,8 +96,8 @@ public class Drive {
 		return null;
 	}
 
-	private OperationType moveY(CarController car, Coordinate current, Coordinate next) {
-		int currentY = current.y;
+	private OperationType moveY(CarController car, float currentY, Coordinate next) {
+//		float currentY = currentY;
 		int nextY = next.y;
 		switch (car.getOrientation()) {
 			case EAST:

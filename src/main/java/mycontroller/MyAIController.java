@@ -24,7 +24,7 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-	private final float CAR_SPEED = 0.8f;
+	private final float CAR_SPEED = 1.5f;
 
 
 	public MyAIController(Car car) {

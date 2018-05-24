@@ -12,13 +12,8 @@ import java.util.HashMap;
 public class test {
 
 	public static void main(String[] args){
-		Coordinate i1 = new Coordinate(1,2);
-		Coordinate i2 = new Coordinate(1,2);
-		HashMap<Coordinate,String> h = new HashMap<>();
-		h.put(i1,"a");
-		h.put(i2,"b");
-		System.out.println(i1.hashCode());
-		System.out.println(i2.hashCode());
-		System.out.println(h);
+		float a = 5.0f;
+		int b = 5;
+		System.out.print(a== b);
 	}
 }
