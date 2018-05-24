@@ -1,6 +1,7 @@
 package mycontroller.PathDiscovery;
 
-import tiles.LavaTrap;
+import mycontroller.PathDiscovery.IDiscoveryStrategy;
+import mycontroller.PathDiscovery.Node;
 import tiles.MapTile;
 import utilities.Coordinate;
 
