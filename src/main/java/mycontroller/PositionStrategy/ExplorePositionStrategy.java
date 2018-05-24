@@ -1,5 +1,6 @@
 package mycontroller.PositionStrategy;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import controller.CarController;
 import mycontroller.MapRecorder;
 import mycontroller.MyAIController;
@@ -26,7 +27,7 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
         for(int i = 0; i< World.MAP_WIDTH; i++){
             for(int j=0;j<World.MAP_HEIGHT;j++){
                 int tempDistance=(int)(Math.pow((currentX-i),2)+Math.pow((currentY-j),2));
-                if(map[i][j]==null&&tempDistance<distance){
+                if(map[i][j]==null&&tempDistance<distance&&World.getMap().get(new Coordinate(i,j)).isType(MapTile.Type.ROAD)){
                     distance=tempDistance;
                     currentX=i;
                     currentY=j;
