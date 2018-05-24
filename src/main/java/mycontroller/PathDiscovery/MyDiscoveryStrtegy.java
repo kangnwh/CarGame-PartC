@@ -91,7 +91,7 @@ public class MyDiscoveryStrtegy implements IDiscoveryStrategy {
 			return false;
 		}
 
-		if (map[x][y] == null || map[x][y].getType() == MapTile.Type.WALL) {
+		if (map[x][y]!=null && map[x][y].getType() == MapTile.Type.WALL) {
 			return false;
 		}
 

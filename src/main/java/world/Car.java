@@ -91,7 +91,7 @@ public class Car extends Sprite{
 
 	public void update(float delta) {
 			if(Simulation.DEBUG_MODE){
-				printDebug();
+//				printDebug(); //TODO disable org log
 			}
 			// Get the current tile
 			MapTile currentTile = World.lookUp(getX(), getY());

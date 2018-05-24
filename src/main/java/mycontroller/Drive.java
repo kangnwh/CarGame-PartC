@@ -3,6 +3,7 @@ package mycontroller;
 import controller.CarController;
 import mycontroller.PositionStrategy.NextPositionFactory;
 import utilities.Coordinate;
+import world.Car;
 
 import java.util.LinkedList;
 
@@ -28,6 +29,7 @@ public class Drive {
 
 		if (coordinatesInPath.size() == 0) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
+			printPathInfo();
 		}
 
 		if(nextPosition == null || nextPosition.equals(currentPosition)){
@@ -47,7 +49,14 @@ public class Drive {
 			return moveY(car,currentPosition,nextPosition);
 		}
 
-//		return null;
+	}
+
+	//TODO debug log print
+	private void printPathInfo(){
+		for(Coordinate co:coordinatesInPath){
+			MyAIController.logger.debug(co);
+		}
+
 	}
 
 	private OperationType moveX(CarController car, Coordinate current, Coordinate next) {

@@ -3,6 +3,8 @@ package mycontroller;
 import controller.CarController;
 import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
 import mycontroller.PathDiscovery.TestDiscoveryStrtegy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
@@ -16,6 +18,8 @@ import java.util.HashMap;
  */
 
 public class MyAIController extends CarController {
+
+	public static Logger logger = LogManager.getFormatterLogger();
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
@@ -26,11 +30,11 @@ public class MyAIController extends CarController {
 		super(car);
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
-// 		drive = new Drive(co);
+ 		drive = new Drive(co);
  		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy(),this.getMap());
 		//TODO for tesing
 //		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
-		drive = new Drive(new Coordinate(6,5));
+//		drive = new Drive(new Coordinate(6,5));
 
 
 		currentOperation = OperationType.FORWARD_ACCE;
@@ -43,35 +47,16 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-//		if (getSpeed() < CAR_SPEED) {
-//			applyForwardAcceleration();
-//		}
+
+
 		handleOperation(delta);
-
-//		this.turnLeft(delta);
-//		this.handleNorth(this.getOrientation(),delta);
-
-
-//		currentPosition=new Coordinate(this.getPosition());
-
-//		/* if reaches a targe position, a strategy should be applied to find next target position */
-//		if(targetPosition.equals(this.getPosition())){
-//			targetPosition= NextPositionFactory.chooseNextPositionStrategy(this).
-//					getNextPosition(this.mapRecorder,this);
-//		}
-
-		/* get how to do next to get to target position  */
-
-//		if(operations.size()==0){
-//			operations=drive.getOperations(path.findPath(currentPosition,targetPosition));
-//		}
-
-		//TODO check whether currentOperation is done if not, adjust , if done, get another
-		/* Only turn operation need adjust based on car status/direction */
 
 	}
 
 	private void handleOperation(float delta) {
+		if(getSpeed() == 0){
+			applyForwardAcceleration();
+		}
 		switch (currentOperation) {
 			case TURN_EAST:
 				if (this.getOrientation() != WorldSpatial.Direction.EAST) {
@@ -126,27 +111,6 @@ public class MyAIController extends CarController {
 				break;
 		}
 	}
-
-//	private void handleOperation(Operation operation){
-//		switch (operation.getOperationType()){
-//			case BRAKE:
-//				handleBrake();
-//				break;
-//			case FORWARD_ACCE:
-//				handleForward();
-//				break;
-//			case TURN_LEFT:
-//				handleTurnLeft(operation.getArgu());
-//				break;
-//			case TURN_RIGHT:
-//				handleTurnRight(operation.getArgu());
-//				break;
-//			case REVERSE_ACCE:
-//				handleReverse();
-//				break;
-//		}
-//	}
-
 
 	private void handleEast(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
