@@ -1,9 +1,8 @@
 package mycontroller;
 
 import controller.CarController;
-import mycontroller.PathDiscovery.AStar;
-import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
-import mycontroller.PathDiscovery.TestDiscoveryStrtegy;
+import mycontroller.PathDiscovery.AStarStrategy;
+import mycontroller.PathDiscovery.MyDiscoveryStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
@@ -32,10 +31,10 @@ public class MyAIController extends CarController {
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
  		drive = new Drive(co);
- 		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy(),this.getMap());
-		mapRecorder = new MapRecorder(new AStar(),this.getMap());
+ 		mapRecorder = new MapRecorder(new MyDiscoveryStrategy(),this.getMap());
+		mapRecorder = new MapRecorder(new AStarStrategy(),this.getMap());
 		//TODO for tesing
-//		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
+//		mapRecorder = new MapRecorder(new TestDiscoveryStrategy(), this.getMap());
 //		drive = new Drive(new Coordinate(6,5));
 
 

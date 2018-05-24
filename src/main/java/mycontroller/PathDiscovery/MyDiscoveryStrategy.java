@@ -9,13 +9,13 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
- * MyDiscoveryStrtegy
+ * MyDiscoveryStrategy
  * <p>
  * Author Ning Kang
  * Date 24/5/18
  */
 
-public class MyDiscoveryStrtegy implements IDiscoveryStrategy {
+public class MyDiscoveryStrategy implements IDiscoveryStrategy {
 	private static Comparator<Coordinate> upRightFirst = new UpRightFirst();
 	private static Comparator<Coordinate> downRightFirst = new DownRightFirst();
 	private static Comparator<Coordinate> upLeftFirst = new UpLeftFirst();

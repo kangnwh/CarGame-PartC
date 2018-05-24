@@ -10,12 +10,12 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 /**
- * ClassName: AStar
+ * ClassName: AStarStrategy
  *
  * @author kesar
  * @Description: A星算法
  */
-public class AStar implements IDiscoveryStrategy {
+public class AStarStrategy implements IDiscoveryStrategy {
 	public final static MapTile.Type BAR = MapTile.Type.WALL; // 障碍值
 	public final static MapTile.Type PATH = null; // 路径
 	public final static int DIRECT_VALUE = 10; // 横竖移动代价
