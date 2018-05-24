@@ -6,13 +6,13 @@ import utilities.Coordinate;
 import java.util.LinkedList;
 
 /**
- * MyDiscoveryStrtegy
+ * MyDiscoveryStrategy
  * <p>
  * Author Ning Kang
  * Date 24/5/18
  */
 
-public class TestDiscoveryStrtegy implements IDiscoveryStrategy {
+public class TestDiscoveryStrategy implements IDiscoveryStrategy {
 	@Override
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, MapTile[][] map) {
 		LinkedList<Coordinate> coordinatesInPath = new LinkedList<>();
