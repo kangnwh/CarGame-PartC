@@ -109,10 +109,6 @@ public class MapRecorder {
 		return keys.containsKey(key);
 	}
 
-	public HashMap<Coordinate, MapTile> getMapMatrix() {
-		return mapMatrix;
-	}
-
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target) {
 		return discoveryStrategy.findPath(current, target, getMap());
 	}
