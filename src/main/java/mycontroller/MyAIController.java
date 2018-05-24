@@ -1,6 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
+import mycontroller.PathDiscovery.AStar;
 import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
 import mycontroller.PathDiscovery.TestDiscoveryStrtegy;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,7 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-	private final float CAR_SPEED = 1.0f;
+	private final float CAR_SPEED = 0.8f;
 
 
 	public MyAIController(Car car) {
@@ -32,6 +33,7 @@ public class MyAIController extends CarController {
 
  		drive = new Drive(co);
  		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy(),this.getMap());
+		mapRecorder = new MapRecorder(new AStar(),this.getMap());
 		//TODO for tesing
 //		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
 //		drive = new Drive(new Coordinate(6,5));
@@ -46,8 +48,6 @@ public class MyAIController extends CarController {
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
-
-
 
 		handleOperation(delta);
 

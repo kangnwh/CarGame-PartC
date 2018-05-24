@@ -2,6 +2,7 @@ package mycontroller.PathDiscovery;
 
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.WorldSpatial;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -59,6 +60,7 @@ public class MyDiscoveryStrtegy implements IDiscoveryStrategy {
 			mapCopy[current.x][current.y] = new MapTile(MapTile.Type.WALL);
 			LinkedList<Coordinate> nextPath = findPath(nextPoint, target, mapCopy);
 			if (nextPath != null) {
+				path.add(nextPoint);
 				path.addAll(nextPath);
 				return path;
 			}

@@ -54,7 +54,7 @@ public class Drive {
 	//TODO debug log print
 	private void printPathInfo(){
 		for(Coordinate co:coordinatesInPath){
-			MyAIController.logger.debug(co);
+			MyAIController.logger.info(co);
 		}
 
 	}
