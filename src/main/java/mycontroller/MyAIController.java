@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 
 public class MyAIController extends CarController {
-//	private MapRecorder mapRecorder;
+	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
 //	private Path path;
@@ -27,13 +27,8 @@ public class MyAIController extends CarController {
 
 	public MyAIController(Car car) {
 		super(car);
-//		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
-		MapRecorder.getInstance().applyPathDiscoveryStrategy(new MyDiscoveryStrtegy());
+		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
 		drive = new Drive();
-//		path=new Path();
-//		operations=new LinkedList<>();
-//		targetPosition=new Coordinate(this.getPosition());
-//		currentPosition=new Coordinate(this.getPosition());
 	}
 
 	@Override
@@ -41,21 +36,7 @@ public class MyAIController extends CarController {
 		// TODO Auto-generated method stub
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
-		MapRecorder.getInstance().addPointsByCarView(currentView);
-
-//		currentPosition=new Coordinate(this.getPosition());
-
-//		/* if reaches a targe position, a strategy should be applied to find next target position */
-//		if(targetPosition.equals(this.getPosition())){
-//			targetPosition= NextPositionFactory.chooseNextPositionStrategy(this).
-//					getNextPosition(this.mapRecorder,this);
-//		}
-
-		/* get how to do next to get to target position  */
-
-//		if(operations.size()==0){
-//			operations=drive.getOperations(path.findPath(currentPosition,targetPosition));
-//		}
+		mapRecorder.addPointsByCarView(currentView);
 
 		//TODO check whether currentOperation is done if not, adjust , if done, get another
 		/* Only turn operation need adjust based on car status/direction */
