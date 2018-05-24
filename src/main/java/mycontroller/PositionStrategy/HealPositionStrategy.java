@@ -1,8 +1,12 @@
-package mycontroller;
+package mycontroller.PositionStrategy;
 
+import controller.CarController;
+import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.Car;
 
 /**
  * This strategy is to assign the next position to be a heal coordinate.
@@ -11,7 +15,7 @@ import utilities.Coordinate;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
-    public Coordinate getNextPosition(MapRecorder mapRecorder, MyAIController myAIController){
+    public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
         MapTile[][] map=mapRecorder.getMap();
         for(int i=0;i<map.length;i++){
             for(int j=0;j<map[i].length;j++){

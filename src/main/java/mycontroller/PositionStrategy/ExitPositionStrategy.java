@@ -1,6 +1,10 @@
-package mycontroller;
+package mycontroller.PositionStrategy;
 
+import controller.CarController;
+import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import utilities.Coordinate;
+import world.Car;
 
 /**
  * This strategy is used to find the exit position.
@@ -10,8 +14,8 @@ import utilities.Coordinate;
  * If the map information is not enough for this task, null will be returned.
  *
  */
-public class ExitPositionStrategy implements INextPositionStrategy{
-    public Coordinate getNextPosition(MapRecorder mapRecorder,MyAIController myAIController){
+public class ExitPositionStrategy implements INextPositionStrategy {
+    public Coordinate getNextPosition(MapRecorder mapRecorder,  CarController car){
         return mapRecorder.getExit();
     }
 

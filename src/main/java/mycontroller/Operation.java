@@ -13,8 +13,12 @@ public class Operation {
 		BRAKE,
 		FORWARD_ACCE,
 		REVERSE_ACCE,
-		TURN_LEFT,
-		TURN_RIGHT
+//		TURN_LEFT,
+//		TURN_RIGHT,
+		TURN_NORTH,
+		TURN_SOUTH,
+		TURN_EAST,
+		TURN_WEST
 	}
 	private OperationType operationType;
 	private float argu;

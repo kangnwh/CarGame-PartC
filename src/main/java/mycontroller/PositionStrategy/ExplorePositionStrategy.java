@@ -1,7 +1,11 @@
-package mycontroller;
+package mycontroller.PositionStrategy;
 
+import controller.CarController;
+import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.Car;
 import world.World;
 
 /**
@@ -10,12 +14,12 @@ import world.World;
  *
  */
 
-public class ExplorePositionStrategy implements INextPositionStrategy{
-    public Coordinate getNextPosition(MapRecorder mapRecorder, MyAIController myAIController){
+public class ExplorePositionStrategy implements INextPositionStrategy {
+    public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
         //Todo how to find a position for explore?
         MapTile[][] map=mapRecorder.getMap();
-        int currentX=Math.round(myAIController.getX());
-        int currentY=Math.round(myAIController.getY());
+        int currentX=Math.round(car.getX());
+        int currentY=Math.round(car.getY());
         int distance=Integer.MAX_VALUE;
         int exploreX=0;
         int exploreY=0;

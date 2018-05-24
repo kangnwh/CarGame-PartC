@@ -1,7 +1,11 @@
-package mycontroller;
+package mycontroller.PositionStrategy;
 
 
+import controller.CarController;
+import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import utilities.Coordinate;
+import world.Car;
 
 /**
  * This strategy is used to find the next key position if it can.
@@ -11,7 +15,7 @@ import utilities.Coordinate;
  */
 
 public class KeyPositionStrategy implements INextPositionStrategy {
-    public Coordinate getNextPosition(MapRecorder mapRecorder,MyAIController myAIController){
-        return mapRecorder.getKey(myAIController.getKey()-1);
+    public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
+        return mapRecorder.getKey(car.getKey()-1);
     }
 }
