@@ -13,7 +13,6 @@ import world.World;
 
 public class ExplorePositionStrategy implements INextPositionStrategy {
 	public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car) {
-		//Todo how to find a position for explore?
 		MapTile[][] map = mapRecorder.getMap();
 		int currentX = Math.round(car.getX());
 		int currentY = Math.round(car.getY());
