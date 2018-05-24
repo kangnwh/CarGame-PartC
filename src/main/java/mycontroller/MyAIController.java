@@ -1,7 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
-import mycontroller.PathDiscovery.MyDiscoveryStrtegy;
+import mycontroller.PathDiscovery.TestDiscoveryStrtegy;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
@@ -18,28 +18,20 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-	//	private Path path;
-//	private LinkedList<Operation> operations;
-//	private Coordinate targetPosition;
-//	private LinkedList<Coordinate> coordinatesInPath;
-//	private Coordinate currentPosition;
-	private final float CAR_SPEED = 3;
+	private final float CAR_SPEED = 1.0f;
 
 
 	public MyAIController(Car car) {
 		super(car);
-		Coordinate co = new Coordinate((int)car.getX(),(int)car.getY());
-		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
+		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
+
+// 		drive = new Drive(co);
+// 		mapRecorder = new MapRecorder(new MyDiscoveryStrtegy());
 		//TODO for tesing
-//		drive = new Drive(co);
+		mapRecorder = new MapRecorder(new TestDiscoveryStrtegy(), this.getMap());
 		drive = new Drive(new Coordinate(6,5));
 
-//
-//
-// path=new Path();
-//		operations=new LinkedList<>();
-//		targetPosition=new Coordinate(this.getPosition());
-//		currentPosition=new Coordinate(this.getPosition());
+
 		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
@@ -50,9 +42,9 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-		if (getSpeed() < CAR_SPEED) {
-			applyForwardAcceleration();
-		}
+//		if (getSpeed() < CAR_SPEED) {
+//			applyForwardAcceleration();
+//		}
 		handleOperation(delta);
 
 //		this.turnLeft(delta);
@@ -116,18 +108,21 @@ public class MyAIController extends CarController {
 				break;
 			case BRAKE:
 				this.applyBrake();
-//				break;
+				currentOperation = drive.getOperation(mapRecorder, this);
+				break;
 			case FORWARD_ACCE:
-				this.applyForwardAcceleration();
-//				break;
+				if (getSpeed() < CAR_SPEED) {
+					this.applyForwardAcceleration();
+				}
+				currentOperation = drive.getOperation(mapRecorder, this);
+				break;
 			case REVERSE_ACCE:
 				this.applyReverseAcceleration();
-//				break;
+				currentOperation = drive.getOperation(mapRecorder, this);
+				break;
 			default:
 				currentOperation = drive.getOperation(mapRecorder, this);
 				break;
-
-
 		}
 	}
 

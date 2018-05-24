@@ -2,9 +2,6 @@ package mycontroller.PositionStrategy;
 
 import controller.CarController;
 import mycontroller.MapRecorder;
-import mycontroller.MyAIController;
-import mycontroller.PositionStrategy.*;
-import world.Car;
 
 public class NextPositionFactory {
 

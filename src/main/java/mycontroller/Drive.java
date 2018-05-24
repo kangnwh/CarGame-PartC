@@ -16,12 +16,6 @@ public class Drive {
 		this.coordinatesInPath = new LinkedList<>();
 		coordinatesInPath = new LinkedList<>();
 		targetPosition = initPosition;
-		coordinatesInPath.add(new Coordinate(3,3));
-		coordinatesInPath.add(new Coordinate(4,3));
-		coordinatesInPath.add(new Coordinate(5,3));
-		coordinatesInPath.add(new Coordinate(6,3));
-		coordinatesInPath.add(new Coordinate(6,4));
-		coordinatesInPath.add(new Coordinate(6,5));
 	}
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
@@ -36,9 +30,11 @@ public class Drive {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 		}
 
-		if(nextPosition.equals(currentPosition)){
+		if(nextPosition == null || nextPosition.equals(currentPosition)){
 			nextPosition = coordinatesInPath.poll();
 		}
+
+
 
 
 		//TODO calculate operation to get to nextPositon

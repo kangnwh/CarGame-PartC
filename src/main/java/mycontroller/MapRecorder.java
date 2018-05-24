@@ -4,6 +4,7 @@ import mycontroller.PathDiscovery.IDiscoveryStrategy;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.World;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,15 +27,22 @@ public class MapRecorder {
 
 
 
-	public MapRecorder(IDiscoveryStrategy discoveryStrategy) {
-		xLength = 1;
-		yLength = 1;
+	public MapRecorder(IDiscoveryStrategy discoveryStrategy, HashMap<Coordinate,MapTile> roadMap) {
+		xLength = World.MAP_WIDTH;
+		yLength = World.MAP_HEIGHT;
 		exitFounded=false;
 		exit=null;
-		mapMatrix = new HashMap<>();
+		mapMatrix = roadMap;
 		keys=new HashMap<>();
 		this.discoveryStrategy = discoveryStrategy;
 	}
+
+//	private void initialRoad(HashMap<Coordinate,MapTile> roadMap){
+//		for(Map.Entry<Coordinate,MapTile> entry:roadMap.entrySet()){
+//			addPoint(entry.getKey().x,entry.getKey().y,entry.getValue());
+//		}
+//	}
+
 
 
 	public boolean isExitFounded() {
@@ -46,12 +54,6 @@ public class MapRecorder {
 	}
 
 	public void addPoint(int x, int y, MapTile tile){
-		if(x>xLength){
-			xLength = x;
-		}
-		if(y>yLength){
-			yLength = y;
-		}
 
 		Coordinate co=new Coordinate(x,y);
 		mapMatrix.put(co,tile);
