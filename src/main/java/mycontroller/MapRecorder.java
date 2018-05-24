@@ -20,7 +20,6 @@ public class MapRecorder {
 	private HashMap<Coordinate, MapTile> mapMatrix;
 	private int xLength;
 	private int yLength;
-	private boolean exitFounded;
 	private Coordinate exit;
 	private HashMap<Integer,Coordinate> keys;
 	private IDiscoveryStrategy discoveryStrategy;
@@ -30,11 +29,20 @@ public class MapRecorder {
 	public MapRecorder(IDiscoveryStrategy discoveryStrategy, HashMap<Coordinate,MapTile> roadMap) {
 		xLength = World.MAP_WIDTH;
 		yLength = World.MAP_HEIGHT;
-		exitFounded=false;
-		exit=null;
-		mapMatrix = roadMap;
+		mapMatrix=new HashMap<>();
 		keys=new HashMap<>();
 		this.discoveryStrategy = discoveryStrategy;
+		for(Map.Entry entry:roadMap.entrySet()){
+			Coordinate co = (Coordinate)entry.getKey();
+			MapTile tile = (MapTile)entry.getValue();
+			if(!tile.isType(MapTile.Type.ROAD)){
+				mapMatrix.put(co,tile);
+			}
+			if(tile.isType(MapTile.Type.FINISH)){
+				exit=co;
+			}
+		}
+
 	}
 
 //	private void initialRoad(HashMap<Coordinate,MapTile> roadMap){
@@ -43,24 +51,11 @@ public class MapRecorder {
 //		}
 //	}
 
-
-
-	public boolean isExitFounded() {
-		return exitFounded;
-	}
-
-	public void setExitFounded(boolean exitFounded) {
-		this.exitFounded = exitFounded;
-	}
-
 	public void addPoint(int x, int y, MapTile tile){
 
 		Coordinate co=new Coordinate(x,y);
 		mapMatrix.put(co,tile);
 
-		if(isExit(tile)){
-			setExit(co);
-		}
 		if(isKey(tile)){
 			addKey(co,tile);
 		}
@@ -83,7 +78,7 @@ public class MapRecorder {
 	}
 
 	public MapTile[][] getMap(){
-		MapTile[][] map = new MapTile[xLength+1][yLength+1];
+		MapTile[][] map = new MapTile[xLength][yLength];
 		for(Map.Entry entry:mapMatrix.entrySet()){
 			Coordinate co = (Coordinate)entry.getKey();
 			MapTile tile = (MapTile)entry.getValue();
@@ -92,18 +87,11 @@ public class MapRecorder {
 		return map;
 	}
 
-	public boolean isExit(MapTile tile){
-		return tile.getType()==MapTile.Type.FINISH;
-	}
 
 	public Coordinate getExit() {
 		return exit;
 	}
 
-	public void setExit(Coordinate exit) {
-		setExitFounded(true);
-		this.exit = exit;
-	}
 
 	public void addKey(Coordinate co,MapTile tile){
 		keys.put(((LavaTrap)tile).getKey(),co);
@@ -128,5 +116,7 @@ public class MapRecorder {
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target){
 		return discoveryStrategy.findPath(current,target);
 	}
+
+
 
 }

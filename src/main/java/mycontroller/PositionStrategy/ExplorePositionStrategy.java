@@ -27,7 +27,7 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
         for(int i = 0; i< World.MAP_WIDTH; i++){
             for(int j=0;j<World.MAP_HEIGHT;j++){
                 int tempDistance=(int)(Math.pow((currentX-i),2)+Math.pow((currentY-j),2));
-                if(map[i][j]==null&&tempDistance<distance&&World.getMap().get(new Coordinate(i,j)).isType(MapTile.Type.ROAD)){
+                if(map[i][j]==null&&tempDistance<distance){
                     distance=tempDistance;
                     exploreX=i;
                     exploreY=j;

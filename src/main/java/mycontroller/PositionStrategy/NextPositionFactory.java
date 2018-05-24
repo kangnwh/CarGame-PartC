@@ -11,7 +11,7 @@ public class NextPositionFactory {
 			return new HealPositionStrategy();
 		} else if (car.getKey() != 1 && mapRecorder.keyFounded(car.getKey() - 1)) {
 			return new KeyPositionStrategy();
-		} else if (car.getKey() == 1 && mapRecorder.isExitFounded()) {
+		} else if (car.getKey() == 1) {
 			return new ExitPositionStrategy();
 		} else {
 			return new ExplorePositionStrategy();
