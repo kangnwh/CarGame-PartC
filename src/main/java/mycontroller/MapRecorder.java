@@ -1,10 +1,12 @@
 package mycontroller;
 
+import mycontroller.PathDiscovery.IDiscoveryStrategy;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -13,20 +15,33 @@ import java.util.Map;
  */
 
 public class MapRecorder {
+	private static MapRecorder mapRecorder = new MapRecorder();
 	private HashMap<Coordinate, MapTile> mapMatrix;
 	private int xLength;
 	private int yLength;
 	private boolean exitFounded;
 	private Coordinate exit;
 	private HashMap<Integer,Coordinate> keys;
+	private IDiscoveryStrategy discoveryStrategy;
 
-	public MapRecorder() {
+
+
+	private MapRecorder() {
 		xLength = 1;
 		yLength = 1;
 		exitFounded=false;
 		exit=null;
 		mapMatrix = new HashMap<>();
 		keys=new HashMap<>();
+		this.discoveryStrategy = discoveryStrategy;
+	}
+
+	public static MapRecorder getInstance(){
+		return mapRecorder;
+	}
+
+	public void applyPathDiscoveryStrategy(IDiscoveryStrategy discoveryStrategy){
+		this.discoveryStrategy = discoveryStrategy;
 	}
 
 	public boolean isExitFounded() {
@@ -113,6 +128,10 @@ public class MapRecorder {
 
 	public HashMap<Coordinate, MapTile> getMapMatrix() {
 		return mapMatrix;
+	}
+
+	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target){
+		return discoveryStrategy.findPath(current,target);
 	}
 
 }
