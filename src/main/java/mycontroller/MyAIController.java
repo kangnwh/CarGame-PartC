@@ -23,7 +23,7 @@ public class MyAIController extends CarController {
 //	private Coordinate targetPosition;
 //	private LinkedList<Coordinate> coordinatesInPath;
 //	private Coordinate currentPosition;
-	private final float CAR_SPEED = 2;
+	private final float CAR_SPEED = 3;
 
 
 	public MyAIController(Car car) {
@@ -49,7 +49,8 @@ public class MyAIController extends CarController {
 		}
 
 //		this.turnLeft(delta);
-		this.handleWest(this.getOrientation(),delta);
+		this.handleNorth(this.getOrientation(),delta);
+
 
 //		currentPosition=new Coordinate(this.getPosition());
 
@@ -140,6 +141,7 @@ public class MyAIController extends CarController {
 //		}
 //	}
 
+
 	private void handleEast(WorldSpatial.Direction orientation,float delta) {
 		switch(orientation){
 			case EAST:
@@ -169,6 +171,7 @@ public class MyAIController extends CarController {
 				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
 					turnRight(delta);
 				}
+				break;
 			case NORTH:
 				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
 					turnLeft(delta);
