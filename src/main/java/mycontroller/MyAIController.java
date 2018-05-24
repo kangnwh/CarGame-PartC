@@ -23,6 +23,7 @@ public class MyAIController extends CarController {
 //	private Coordinate targetPosition;
 //	private LinkedList<Coordinate> coordinatesInPath;
 //	private Coordinate currentPosition;
+	private final float CAR_SPEED = 2;
 
 
 	public MyAIController(Car car) {
@@ -43,6 +44,13 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		MapRecorder.getInstance().addPointsByCarView(currentView);
 
+		if(getSpeed() < CAR_SPEED){
+			applyForwardAcceleration();
+		}
+
+//		this.turnLeft(delta);
+		this.handleWest(this.getOrientation(),delta);
+
 //		currentPosition=new Coordinate(this.getPosition());
 
 //		/* if reaches a targe position, a strategy should be applied to find next target position */
@@ -59,57 +67,57 @@ public class MyAIController extends CarController {
 
 		//TODO check whether currentOperation is done if not, adjust , if done, get another
 		/* Only turn operation need adjust based on car status/direction */
-		switch (currentOperation) {
-			case TURN_EAST:
-				if (this.getOrientation() == WorldSpatial.Direction.EAST) {
-					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleEast(delta);
-				}
-
-				break;
-			case TURN_WEST:
-				if (this.getOrientation() == WorldSpatial.Direction.WEST) {
-					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleWest(delta);
-				}
-
-				break;
-			case TURN_NORTH:
-				if (this.getOrientation() == WorldSpatial.Direction.NORTH) {
-					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleNorth(delta);
-				}
-
-				break;
-			case TURN_SOUTH:
-				if (this.getOrientation() == WorldSpatial.Direction.SOUTH) {
-					currentOperation = drive.getOperation(mapRecorder, this);
-					update(delta);
-				}else{
-					handleSouth(delta);
-				}
-
-				break;
-			case BRAKE:
-				this.applyBrake();
-				break;
-			case FORWARD_ACCE:
-				this.applyForwardAcceleration();
-				break;
-			case REVERSE_ACCE:
-				this.applyReverseAcceleration();
-				break;
-			default:
-				break;
-
-
-		}
+//		switch (currentOperation) {
+//			case TURN_EAST:
+//				if (this.getOrientation() == WorldSpatial.Direction.EAST) {
+//					currentOperation = drive.getOperation(mapRecorder, this);
+//					update(delta);
+//				}else{
+//					handleEast(delta);
+//				}
+//
+//				break;
+//			case TURN_WEST:
+//				if (this.getOrientation() == WorldSpatial.Direction.WEST) {
+//					currentOperation = drive.getOperation(mapRecorder, this);
+//					update(delta);
+//				}else{
+//					handleWest(delta);
+//				}
+//
+//				break;
+//			case TURN_NORTH:
+//				if (this.getOrientation() == WorldSpatial.Direction.NORTH) {
+//					currentOperation = drive.getOperation(mapRecorder, this);
+//					update(delta);
+//				}else{
+//					handleNorth(delta);
+//				}
+//
+//				break;
+//			case TURN_SOUTH:
+//				if (this.getOrientation() == WorldSpatial.Direction.SOUTH) {
+//					currentOperation = drive.getOperation(mapRecorder, this);
+//					update(delta);
+//				}else{
+//					handleSouth(delta);
+//				}
+//
+//				break;
+//			case BRAKE:
+//				this.applyBrake();
+//				break;
+//			case FORWARD_ACCE:
+//				this.applyForwardAcceleration();
+//				break;
+//			case REVERSE_ACCE:
+//				this.applyReverseAcceleration();
+//				break;
+//			default:
+//				break;
+//
+//
+//		}
 	}
 
 //	private void handleOperation(Operation operation){
@@ -132,36 +140,98 @@ public class MyAIController extends CarController {
 //		}
 //	}
 
-	private void handleEast(float delta) {
-		//TODO pending
-		float angle = this.getAngle();
-		if (this.getOrientation() == WorldSpatial.Direction.EAST) {
-
+	private void handleEast(WorldSpatial.Direction orientation,float delta) {
+		switch(orientation){
+			case EAST:
+				break;
+			case NORTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+					turnRight(delta);
+				}
+				break;
+			case SOUTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+					turnLeft(delta);
+				}
+				break;
+			case WEST:
+				if(!getOrientation().equals(WorldSpatial.Direction.EAST)){
+					turnRight(delta);
+				}
+				break;
 		}
 
-		this.turnLeft(delta);
 	}
 
-	private void handleWest(float delta) {
-		//TODO pending
-		this.turnRight(delta);
+	private void handleWest(WorldSpatial.Direction orientation,float delta) {
+		switch(orientation){
+			case EAST:
+				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+					turnRight(delta);
+				}
+			case NORTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+					turnLeft(delta);
+				}
+				break;
+			case SOUTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.WEST)){
+					turnRight(delta);
+				}
+				break;
+			case WEST:
+				break;
+		}
 	}
 
-	private void handleNorth(float delta) {
-		//TODO pending
-		this.turnLeft(delta);
+	private void handleNorth(WorldSpatial.Direction orientation,float delta) {
+		switch(orientation){
+			case EAST:
+				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+					turnLeft(delta);
+				}
+			case NORTH:
+				break;
+			case SOUTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+					turnLeft(delta);
+				}
+				break;
+			case WEST:
+				if(!getOrientation().equals(WorldSpatial.Direction.NORTH)){
+					turnRight(delta);
+				}
+				break;
+		}
 	}
 
-	private void handleSouth(float delta) {
-		//TODO pending
-		this.turnRight(delta);
+	private void handleSouth(WorldSpatial.Direction orientation,float delta) {
+		switch(orientation){
+			case EAST:
+				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+					turnRight(delta);
+				}
+				break;
+			case NORTH:
+				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+					turnRight(delta);
+				}
+				break;
+			case SOUTH:
+				break;
+			case WEST:
+				if(!getOrientation().equals(WorldSpatial.Direction.SOUTH)){
+					turnLeft(delta);
+				}
+				break;
+		}
 	}
 
 	private void updateCarStatus() {
 		//TODO pending
 	}
 
-	public MapRecorder getMapRecorder() {
-		return mapRecorder;
-	}
+//	public MapRecorder getMapRecorder() {
+//		return mapRecorder;
+//	}
 }
