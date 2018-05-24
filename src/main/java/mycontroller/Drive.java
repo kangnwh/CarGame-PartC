@@ -19,7 +19,7 @@ public class Drive {
 	}
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
-		Coordinate currentPosition = new Coordinate((int) car.getX(), (int) car.getY());
+		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round( car.getY()));
 		/* if reaches a targe position, a strategy should be applied to find next target position */
 		if (targetPosition.equals(currentPosition)) {
 			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
