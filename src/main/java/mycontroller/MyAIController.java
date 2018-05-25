@@ -59,9 +59,9 @@ public class MyAIController extends CarController {
 		mapRecorder.addPointsByCarView(currentView);
 
 
-		if(this.getHealth()<100&&mapRecorder.getMapMatrix().get(new Coordinate(this.getPosition())) instanceof HealthTrap){
-			applyBrake();
-		}
+//		if(this.getHealth()<100&&mapRecorder.getMapMatrix().get(new Coordinate(this.getPosition())) instanceof HealthTrap){
+//			applyBrake();
+//		}
 		if(stuckCheck() || stuckTimer >0){
 			applyReverseAcceleration();
 			turnRight(delta);
