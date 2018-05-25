@@ -239,7 +239,4 @@ public class MyAIController extends CarController {
 		//TODO pending
 	}
 
-//	public MapRecorder getMapRecorder() {
-//		return mapRecorder;
-//	}
 }
