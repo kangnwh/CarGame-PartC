@@ -3,6 +3,7 @@ package mycontroller;
 import controller.CarController;
 import mycontroller.PositionStrategy.NextPositionFactory;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import tiles.MapTile;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
@@ -71,8 +72,15 @@ public class Drive {
 				result = moveY(car, car.getY(), nextPosition);
 			}
 		}catch(Exception e){
-			MyAIController.logger.info(String.format("nextPosition:({%s})",nextPosition));
-			System.exit(-1);
+			while (coordinatesInPath.size()==0){
+				MyAIController.logger.info(String.format("nextPosition:({%s})",nextPosition));
+				mapRecorder.addPoint(targetPosition.x,targetPosition.y, new MapTile(MapTile.Type.ROAD));
+				targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
+						getNextPosition(mapRecorder, car);
+				coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
+				nextPosition = coordinatesInPath.poll();
+			}
+			//			System.exit(-1);
 		}
 		if (mapRecorder.isLava(currentPosition)) {
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
