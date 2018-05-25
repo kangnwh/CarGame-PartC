@@ -138,5 +138,7 @@ public class MapRecorder {
 
 	}
 
-
+	public HashMap<Coordinate, MapTile> getMapMatrix() {
+		return mapMatrix;
+	}
 }
