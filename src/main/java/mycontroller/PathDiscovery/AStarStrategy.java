@@ -8,6 +8,7 @@ import utilities.Coordinate;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 
@@ -44,8 +45,12 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		for(Coordinate co:list){
 			newList.addFirst(co);
 		}
-		newList.removeFirst();
-		newList.removeFirst();
+		try {
+			newList.removeFirst();
+			newList.removeFirst();
+		}catch (NoSuchElementException e){
+
+		}
 		return newList;
 	}
 
