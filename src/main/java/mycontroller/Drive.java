@@ -28,6 +28,7 @@ public class Drive {
 	}
 
 	// provide the operation for the next controller
+
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
@@ -154,6 +155,7 @@ public class Drive {
 	}
 
 	// handling the operation with different situations
+
 	private OperationType turn(CarController car, float currentX, float currentY, Coordinate next) {
 		int targetX = next.x;
 		int targetY = next.y;
@@ -203,6 +205,7 @@ public class Drive {
 	}
 
 	// Handling the move of horizontal
+
 	private OperationType moveX(CarController car, float currentX, Coordinate next) {
 		int targetX = next.x;
 		switch (car.getOrientation()) {
@@ -236,6 +239,7 @@ public class Drive {
 	}
 
 	// Handling the move of vertical
+
 	private OperationType moveY(CarController car, float currentY, Coordinate next) {
 //		float currentY = currentY;
 		int nextY = next.y;
