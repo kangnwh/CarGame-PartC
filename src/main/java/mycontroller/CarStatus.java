@@ -4,23 +4,14 @@ import controller.CarController;
 
 /**
  * CarStatus
- * <p>
- * Author Ning Kang
- * Date 25/5/18
+ * This is used to get the current status of a car
  */
 
 public class CarStatus {
-	private final float angle;
-	private final float x;
-	private final float y;
-	private final float health;
-
-//	public CarStatus(float angle, float x, float y, float health) {
-//		this.angle = angle;
-//		this.x = x;
-//		this.y = y;
-//		this.health = health;
-//	}
+	private final float angle;  //angle of the car
+	private final float x;      //x coordinate of the car
+	private final float y;      //y coordinate of the car
+	private final float health; //health of the car
 
 	public CarStatus(CarController carController) {
 		this.angle = carController.getAngle();
@@ -45,6 +36,11 @@ public class CarStatus {
 		return health;
 	}
 
+	/**
+	 * Compare if two status of a car is equal
+	 * @param o Object
+	 * @return true if two car status is equal
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
