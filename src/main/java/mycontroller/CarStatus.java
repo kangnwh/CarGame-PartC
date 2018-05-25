@@ -10,10 +10,10 @@ import controller.CarController;
  */
 
 public class CarStatus {
-	final float angle;
-	final float x;
-	final float y;
-	final float health;
+	private final float angle;
+	private final float x;
+	private final float y;
+	private final float health;
 
 //	public CarStatus(float angle, float x, float y, float health) {
 //		this.angle = angle;
