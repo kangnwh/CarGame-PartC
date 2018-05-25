@@ -27,6 +27,8 @@ public class Drive {
 
 	}
 
+	// provide the operation for the next controller
+
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
@@ -117,6 +119,7 @@ public class Drive {
 	}
 
 	//TODO debug log print
+
 	private void printPathInfo() {
 		String log = String.format("Current:(%s) || Target:(%s) || ", nextPosition, targetPosition);
 		for (Coordinate co : coordinatesInPath) {
@@ -125,6 +128,8 @@ public class Drive {
 		MyAIController.logger.info(log);
 
 	}
+
+	// handling the operation with different situations
 
 	private OperationType turn(CarController car, float currentX, float currentY, Coordinate next) {
 		int targetX = next.x;
@@ -174,6 +179,8 @@ public class Drive {
 		return null;
 	}
 
+	// Handling the move of horizontal
+
 	private OperationType moveX(CarController car, float currentX, Coordinate next) {
 		int targetX = next.x;
 		switch (car.getOrientation()) {
@@ -205,6 +212,8 @@ public class Drive {
 
 		return null;
 	}
+
+	// Handling the move of vertical
 
 	private OperationType moveY(CarController car, float currentY, Coordinate next) {
 //		float currentY = currentY;
