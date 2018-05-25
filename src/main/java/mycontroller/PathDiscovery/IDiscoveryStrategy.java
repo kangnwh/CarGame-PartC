@@ -16,4 +16,5 @@ import java.util.LinkedList;
 
 public interface IDiscoveryStrategy {
 	LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, MapTile[][] map);
+	int getCost();
 }

@@ -2,6 +2,7 @@ package mycontroller.PositionStrategy;
 
 import controller.CarController;
 import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.World;
@@ -30,7 +31,7 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
 				}
 			}
 		}
-
+		MyAIController.printLog("Explorer Strategy");
 		return new Coordinate(exploreX, exploreY);
 
 	}

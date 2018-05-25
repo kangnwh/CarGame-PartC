@@ -16,6 +16,7 @@ import world.Car;
 
 public class KeyPositionStrategy implements INextPositionStrategy {
     public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
+        MyAIController.printLog("Key Strategy");
         return mapRecorder.getKey(car.getKey()-1);
     }
 }

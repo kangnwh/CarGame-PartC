@@ -1,8 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
-import mycontroller.PositionStrategy.NextPositionFactory;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+import mycontroller.PositionStrategy.*;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
@@ -16,48 +15,63 @@ public class Drive {
 	private Coordinate targetPosition;
 	private Coordinate nextPosition;
 	private float COORDINATE_DEVIATION = 0.4f;
+	private INextPositionStrategy nextPositionStrategy;
 
 
 	public Drive(Coordinate initPosition) {
 		this.coordinatesInPath = new LinkedList<>();
 		coordinatesInPath = new LinkedList<>();
+		nextPositionStrategy = new ExplorePositionStrategy();
 		targetPosition = initPosition;
 		nextPosition = initPosition;
+
 	}
 
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
+
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
 
-		/* if reaches a targe position, a strategy should be applied to find next target position */
-
-		if (Math.abs(targetPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(targetPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
-			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
-					getNextPosition(mapRecorder, car);
-		}
-
-
-		/* health check interrupt */
-		if (car.getHealth() <= HEALTH_THRESHOLD) {
-			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
+		/* in some special situations, the original navigation need to be interrupted for other strategy   */
+		if (interruptCheck(mapRecorder, car)) {
+			nextPositionStrategy = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder);
+			targetPosition = nextPositionStrategy.getNextPosition(mapRecorder, car);
 			coordinatesInPath.clear();
-		}
+			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition,car);
+			printPathInfo();
 
-		/* recorded check interrupt */
-		if (mapRecorder.isRecorded(targetPosition)) {
-			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
-			coordinatesInPath.clear();
-		}
-
-		if (coordinatesInPath.size() == 0) {
-			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
 		}
 
 
-		if (nextPosition == null || (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
+//		/* if reaches a target position, a strategy should be applied to find next target position */
+//		if (Math.abs(targetPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(targetPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
+//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
+//					getNextPosition(mapRecorder, car);
+//		}
+//
+//		/* health check interruptCheck */
+//		if (car.getHealth() <= HEALTH_THRESHOLD) {
+//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
+//			coordinatesInPath.clear();
+//		}
+//
+//		/* recorded check interruptCheck */
+//		if (mapRecorder.isRecorded(targetPosition)) {
+//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
+//			coordinatesInPath.clear();
+//		}
+
+//		if (coordinatesInPath.size() == 0) {
+//			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
+//		}
+
+
+		if (nextPosition == null
+				|| (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION
+				&& Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
 			nextPosition = coordinatesInPath.poll();
-			if(mapRecorder.isHealth(currentPosition) && car.getHealth() < MAX_HEALTH){
+			if (mapRecorder.isHealth(currentPosition) && car.getHealth() < MAX_HEALTH) {
 				nextPosition = currentPosition;
-				return car.getSpeed()>0 ? OperationType.BRAKE:OperationType.FORWARD_ACCE;
+				return car.getSpeed() == 0 ? OperationType.FORWARD_ACCE : OperationType.BRAKE;
 			}
 		}
 
@@ -70,22 +84,66 @@ public class Drive {
 			} else if (Math.abs(nextPosition.y - car.getY()) > COORDINATE_DEVIATION) {
 				result = moveY(car, car.getY(), nextPosition);
 			}
-		}catch(Exception e){
-			MyAIController.logger.info(String.format("nextPosition:({%s})",nextPosition));
+		} catch (Exception e) {
+			MyAIController.logger.info(String.format("nextPosition:({%s})", nextPosition));
 			System.exit(-1);
 		}
-		if (mapRecorder.isLava(currentPosition)) {
-			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
-		}
+
+//		if (mapRecorder.isLava(currentPosition)) {
+//			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
+//		}
 
 		return result;
 
 	}
 
+	/* in some special situations, the original navigation need to be interrupted for other strategy   */
+	private boolean interruptCheck(MapRecorder mapRecorder, CarController car) {
+
+		if (coordinatesInPath.size() == 0) return true;
+
+		/* target reaches interrupt*/
+		if (Math.abs(targetPosition.x - car.getX()) <= COORDINATE_DEVIATION
+				&& Math.abs(targetPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
+			return true;
+		}
+
+		/* recorded check interruptCheck */
+		if (mapRecorder.isRecorded(targetPosition) && (nextPositionStrategy instanceof ExplorePositionStrategy)) {
+			return true;
+		}
+
+		/* health check interruptCheck */
+		if (car.getHealth() <= HEALTH_THRESHOLD) {
+			if (nextPositionStrategy instanceof HealPositionStrategy) {
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+		/* whether if next key is found */
+		if(mapRecorder.getKey(car.getKey() - 1) != null ){
+			if(!(nextPositionStrategy instanceof KeyPositionStrategy)) {
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
+		if (mapRecorder.isLava(currentPosition)) return true;
+
+
+
+
+		return false;
+
+	}
 
 	//TODO debug log print
 	private void printPathInfo() {
-		String log = String.format("Current:(%s) || Target:(%s) || ",nextPosition.toString(), targetPosition.toString());
+		String log = String.format("Current:(%s) || Target:(%s) || ", nextPosition.toString(), targetPosition.toString());
 		for (Coordinate co : coordinatesInPath) {
 			log = log + "(" + co + ")" + ",";
 		}

@@ -16,6 +16,7 @@ import world.Car;
  */
 public class ExitPositionStrategy implements INextPositionStrategy {
     public Coordinate getNextPosition(MapRecorder mapRecorder,  CarController car){
+        MyAIController.printLog("Exit Strategy");
         return mapRecorder.getExit();
     }
 

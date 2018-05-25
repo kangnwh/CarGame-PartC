@@ -1,5 +1,6 @@
 package mycontroller;
 
+import controller.CarController;
 import mycontroller.PathDiscovery.IDiscoveryStrategy;
 import tiles.HealthTrap;
 import tiles.LavaTrap;
@@ -112,8 +113,30 @@ public class MapRecorder {
 		return keys.containsKey(key);
 	}
 
-	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target) {
-		return discoveryStrategy.findPath(current, target, getMap());
+	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, CarController car) {
+		MapTile[][] tempMap = getMap();
+		int x = (int)car.getX();
+		int y = (int)car.getY();
+		switch(car.getOrientation()){
+			//TODO useless !!!! WHY !!!
+			case SOUTH:
+				if(y+1 < yLength) tempMap[x][y+1] = new MapTile(MapTile.Type.WALL);
+				if(y+2 < yLength) tempMap[x][y+2] = new MapTile(MapTile.Type.WALL);
+				break;
+			case NORTH:
+				if(y-1 >= 0) tempMap[x][y-1] = new MapTile(MapTile.Type.WALL);
+				if(y-2 >=0 ) tempMap[x][y-2] = new MapTile(MapTile.Type.WALL);
+				break;
+			case WEST:
+				if(x+1 < xLength) tempMap[x+1][y] = new MapTile(MapTile.Type.WALL);
+				if(x+2 < xLength ) tempMap[x+2][y] = new MapTile(MapTile.Type.WALL);
+				break;
+			case EAST:
+				if(x-1 >= 0) tempMap[x-1][y] = new MapTile(MapTile.Type.WALL);
+				if(x-2 >=0 ) tempMap[x-2][y] = new MapTile(MapTile.Type.WALL);
+				break;
+		}
+		return discoveryStrategy.findPath(current, target, tempMap);
 	}
 
 	public boolean hasHealthTrap(){
@@ -140,5 +163,9 @@ public class MapRecorder {
 
 	public HashMap<Coordinate, MapTile> getMapMatrix() {
 		return mapMatrix;
+	}
+
+	public IDiscoveryStrategy getDiscoveryStrategyInstance(){
+		return discoveryStrategy;
 	}
 }

@@ -2,6 +2,7 @@ package mycontroller.PathDiscovery;
 
 import mycontroller.PathDiscovery.IDiscoveryStrategy;
 import mycontroller.PathDiscovery.Node;
+import mycontroller.PositionStrategy.ExplorePositionStrategy;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -14,7 +15,7 @@ import java.util.PriorityQueue;
 public class AStarStrategy implements IDiscoveryStrategy {
 
 	public final static int ROAD_VALUE = 10;
-	public final static int LAVA_VALUE = 20;
+	public final static int LAVA_VALUE = 40;
 	public final static int TURN_VALUE = 20;
 
 	private PriorityQueue<Node> openList;
@@ -34,7 +35,6 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		this.target = new Node(target);
 		openList.add(this.current);
 		moveNodes(map);
-
 		return revertList(pathList);
 
 	}
@@ -44,11 +44,17 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		for(Coordinate co:list){
 			newList.addFirst(co);
 		}
-		newList.removeFirst();
-		newList.removeFirst();
+		try {
+			newList.removeFirst();
+//			newList.removeFirst();
+		}catch(Exception e){
+
+		}
 		return newList;
 	}
-
+	public int getCost(){
+		return openList.peek().getG();
+	}
 	private void moveNodes(MapTile[][] map) {
 		while (!openList.isEmpty()) {
 			if (isCoordinateInClose(target.getCoordinate())) {
@@ -94,15 +100,16 @@ public class AStarStrategy implements IDiscoveryStrategy {
 			if(map[x][y] instanceof LavaTrap){
 				cost += LAVA_VALUE;
 			}
-			if(current.getParent().getCoordinate().x != x
+
+			else if(current.getParent().getCoordinate().x != x
 					&& current.getParent().getCoordinate().y != y){
 				cost += TURN_VALUE;
 			}
 
-			int G = current.getG() + cost; // 计算邻结点的G值
+			int G = current.getG() + cost;
 			Node child = findNodeInOpen(coord);
 			if (child == null) {
-				int H = calcH(target.getCoordinate(), coord); // 计算H值
+				int H = calcH(target.getCoordinate(), coord);
 				if (isEndNode(target.getCoordinate(), coord)) {
 					child = target;
 					child.setParent(current);

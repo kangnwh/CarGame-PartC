@@ -3,6 +3,7 @@ package mycontroller.PositionStrategy;
 import controller.CarController;
 import mycontroller.MapRecorder;
 import mycontroller.MyAIController;
+import mycontroller.PathDiscovery.IDiscoveryStrategy;
 import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -15,7 +16,7 @@ import world.Car;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
-    public static final float HEALTH_THRESHOLD = 10.0f;
+    public static final float HEALTH_THRESHOLD = 30.0f;
     private INextPositionStrategy explorePositionStrategy;
 
     public HealPositionStrategy() {
@@ -23,15 +24,30 @@ public class HealPositionStrategy implements INextPositionStrategy {
     }
 
     public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car){
+        int G = Integer.MAX_VALUE;
+        Coordinate target = null;
+        Coordinate current = new Coordinate((int) car.getX(), (int) car.getY());
+
         MapTile[][] map=mapRecorder.getMap();
         for(int i=0;i<map.length;i++){
             for(int j=0;j<map[i].length;j++){
                 if(map[i][j] instanceof HealthTrap){
-                    return new Coordinate(i,j);
+                    Coordinate temp = new Coordinate(i,j);
+                    mapRecorder.findPath(current,temp,car);
+                    int tempG = mapRecorder.getDiscoveryStrategyInstance().getCost();
+                    if(tempG < G){
+                        target = temp;
+                        G = tempG;
+                    }
                 }
             }
         }
-        return this.explorePositionStrategy.getNextPosition(mapRecorder,car);
+        if(target == null){
+            MyAIController.printLog("Explorer Strategy");
+            target = this.explorePositionStrategy.getNextPosition(mapRecorder,car);
+        }
+        MyAIController.printLog("Heal Strategy");
+        return target;
     }
 
 }
