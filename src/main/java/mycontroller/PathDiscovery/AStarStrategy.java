@@ -1,8 +1,5 @@
 package mycontroller.PathDiscovery;
 
-import mycontroller.PathDiscovery.IDiscoveryStrategy;
-import mycontroller.PathDiscovery.Node;
-import mycontroller.PositionStrategy.ExplorePositionStrategy;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -40,22 +37,28 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 	}
 
-	private LinkedList<Coordinate> revertList(LinkedList<Coordinate> list){
+	private LinkedList<Coordinate> revertList(LinkedList<Coordinate> list) {
 		LinkedList<Coordinate> newList = new LinkedList<>();
-		for(Coordinate co:list){
+		for (Coordinate co : list) {
 			newList.addFirst(co);
 		}
 		try {
 			newList.removeFirst();
-//			newList.removeFirst();
-		}catch(Exception e){
+			newList.removeFirst();
+		} catch (Exception e) {
 
 		}
 		return newList;
 	}
-	public int getCost(){
-		return openList.peek().getG();
+
+	public int getCost() {
+		if (openList.size() > 0) {
+			return openList.peek().getG();
+		} else {
+			return 0;
+		}
 	}
+
 	private void moveNodes(MapTile[][] map) {
 		while (!openList.isEmpty()) {
 			if (isCoordinateInClose(target.getCoordinate())) {
@@ -98,12 +101,10 @@ public class AStarStrategy implements IDiscoveryStrategy {
 			Coordinate coord = new Coordinate(x, y);
 			int cost = ROAD_VALUE;
 
-			if(map[x][y] instanceof LavaTrap){
+			if (map[x][y] instanceof LavaTrap) {
 				cost += LAVA_VALUE;
-			}
-
-			else if(current.getParent().getCoordinate().x != x
-					&& current.getParent().getCoordinate().y != y){
+			} else if (current.getParent().getCoordinate().x != x
+					&& current.getParent().getCoordinate().y != y) {
 				cost += TURN_VALUE;
 			}
 

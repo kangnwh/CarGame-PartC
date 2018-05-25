@@ -12,12 +12,14 @@ public class CarStatus {
 	private final float x;      //x coordinate of the car
 	private final float y;      //y coordinate of the car
 	private final float health; //health of the car
+	private final float speed;
 
 	public CarStatus(CarController carController) {
 		this.angle = carController.getAngle();
 		this.x = carController.getX();
 		this.y = carController.getY();
 		this.health = carController.getHealth();
+		this.speed = carController.getSpeed();
 	}
 
 	public float getAngle() {
@@ -51,7 +53,9 @@ public class CarStatus {
 		if (Float.compare(carStatus.angle, angle) != 0) return false;
 		if (Float.compare(carStatus.x, x) != 0) return false;
 		if (Float.compare(carStatus.y, y) != 0) return false;
-		return Float.compare(carStatus.health, health) == 0;
+		if (Float.compare(carStatus.speed, speed) != 0) return false;
+
+		return true;
 	}
 
 }

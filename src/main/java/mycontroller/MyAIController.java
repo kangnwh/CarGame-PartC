@@ -2,7 +2,6 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PathDiscovery.AStarStrategy;
-import mycontroller.PathDiscovery.MyDiscoveryStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
@@ -21,7 +20,8 @@ public class MyAIController extends CarController {
 
 	public static Logger logger = LogManager.getFormatterLogger();
 	public static int MAX_HEALTH = 100; //The max health of car
-	public static int STUCK_TIMER = 10; //The times for car to do the operation when get stuck
+	public static int STUCK_TIMER = 20; //The times for car to do the operation when get stuck
+	public static int CAPTURE_INTERVAL = 15;// the interval to capture the car status for detecting stucking
 
 
 	private MapRecorder mapRecorder;
@@ -30,10 +30,10 @@ public class MyAIController extends CarController {
 	private final float CAR_SPEED = 1.5f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
+	private int captuerTimer;
 
 
 	public static void printLog(String msg) {
-
 		logger.info(msg);
 	}
 
@@ -43,15 +43,8 @@ public class MyAIController extends CarController {
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
 		drive = new Drive(co);
-//		mapRecorder = new MapRecorder(new MyDiscoveryStrategy(), this.getMap());
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
-		//TODO for tesing
-//		mapRecorder = new MapRecorder(new TestDiscoveryStrategy(), this.getMap());
-//		drive = new Drive(new Coordinate(6,5));
-
-
- 		drive = new Drive(co);
-		mapRecorder = new MapRecorder(new AStarStrategy(),this.getMap());
+		captuerTimer = CAPTURE_INTERVAL;
 		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
@@ -64,14 +57,27 @@ public class MyAIController extends CarController {
 		mapRecorder.addPointsByCarView(currentView);
 
 		//if the car is stuck, reverse and turn right for 10 delta to readjust its orientation
-		if (stuckCheck() || stuckTimer > 0) {
+
+		if (captuerTimer > 0) {
+			captuerTimer--;
+			if (stuckCheck()) {
+				stuckTimer = STUCK_TIMER;
+//				drive.skipThisPosition();
+//				currentOperation = drive.getOperation(mapRecorder, this);
+			}
+		}else{
+			lastStatus = new CarStatus(this);
+			captuerTimer = CAPTURE_INTERVAL;
+		}
+
+		if(stuckTimer > 0){
 			solveStuck(delta);
 			stuckTimer--;
 		} else {
 			handleOperation(delta);
-			lastStatus = new CarStatus(this);
+//			printLog(currentOperation.toString());
 		}
-		printLog(currentOperation.toString());
+
 	}
 
 	/**
@@ -81,44 +87,31 @@ public class MyAIController extends CarController {
 	private boolean stuckCheck(){
 		/* stuck interrupt */
 		float angle = getAngle();
+		CarStatus newStatus = new CarStatus(this);
 		int targetDegree = 0;
 		if (lastStatus != null
-				&& lastStatus.getAngle() == this.getAngle()
-				&& lastStatus.getX() == this.getX()
-				&& lastStatus.getY() == this.getY()
+				&& lastStatus.equals(newStatus)
 				&& lastStatus.getHealth() >= this.getHealth()
 				) {
-			switch (currentOperation) {
-				case TURN_SOUTH:
-					targetDegree = WorldSpatial.SOUTH_DEGREE;
-					break;
-				case TURN_NORTH:
-					targetDegree = WorldSpatial.NORTH_DEGREE;
-					break;
-				case TURN_EAST:
-					targetDegree = WorldSpatial.EAST_DEGREE_MIN;
-					break;
-				case TURN_WEST:
-					targetDegree = WorldSpatial.WEST_DEGREE;
-					break;
-			}
-			stuckTimer = Math.round(Math.abs(targetDegree - angle) / 0.3f) * STUCK_TIMER;
+//			switch (currentOperation) {
+//				case TURN_SOUTH:
+//					targetDegree = WorldSpatial.SOUTH_DEGREE;
+//					break;
+//				case TURN_NORTH:
+//					targetDegree = WorldSpatial.NORTH_DEGREE;
+//					break;
+//				case TURN_EAST:
+//					targetDegree = WorldSpatial.EAST_DEGREE_MIN;
+//					break;
+//				case TURN_WEST:
+//					targetDegree = WorldSpatial.WEST_DEGREE;
+//					break;
+//			}
+//			stuckTimer = STUCK_TIMER;
 			printLog("stucked !");
 			return true;
 		}
 
-//		Coordinate currentPosition = new Coordinate(Math.round(this.getX()), Math.round(this.getY()));
-
-//		if (lastStatus != null
-//				&& lastStatus.getAngle() == this.getAngle()
-//				&& lastStatus.getX() == this.getX()
-//				&& lastStatus.getY() == this.getY()
-//				&& this.getHealth() == MAX_HEALTH
-//				&& mapRecorder.isHealth(currentPosition)
-//				) {
-//			stuckTimer = STUCK_TIMER;
-//			return true;
-//		}
 		return false;
 	}
 
@@ -128,92 +121,85 @@ public class MyAIController extends CarController {
 	 * @param delta the time step
 	 */
 	private void solveStuck(float delta) {
-		currentOperation = drive.getOperation(mapRecorder,this);
+//		if(stuckTimer % 2 ==0){
+//			applyReverseAcceleration();
+//			turnLeft(delta);
+//		}else{
+//			applyForwardAcceleration();
+//			turnRight(delta);
+//		}
+//		applyReverseAcceleration();
+
+//		currentOperation = drive.getOperation(mapRecorder,this);
 		float angle = lastStatus.getAngle();
 
 		switch (currentOperation) {
 			case TURN_WEST:
-				if (angle == WorldSpatial.WEST_DEGREE) {
-					return;
-				}
 				if (angle > 0 || angle <= 180) {
-					turnRight(delta);
+					stuckTurnLeft(delta);
 				} else {
-					turnLeft(delta);
+					stuckTurnRight(delta);
 				}
 				break;
 			case TURN_EAST:
-				if (angle == WorldSpatial.EAST_DEGREE_MIN) {
-					return;
-				}
 				if (angle > 0 || angle <= 180) {
-					turnLeft(delta);
+					stuckTurnRight(delta);
 				} else {
-					turnRight(delta);
+					stuckTurnLeft(delta);
 				}
 				break;
 			case TURN_NORTH:
-				if (angle == WorldSpatial.NORTH_DEGREE) {
-					return;
-				}
 				if (angle > 90 || angle <= 270) {
-					turnRight(delta);
+					stuckTurnRight(delta);
 				} else {
-					turnLeft(delta);
+					stuckTurnLeft(delta);
 				}
 				break;
 			case TURN_SOUTH:
-				if (angle == WorldSpatial.SOUTH_DEGREE) {
-					return;
-				}
 				if (angle > 90 || angle <= 270) {
-					turnLeft(delta);
+					stuckTurnLeft(delta);
 				} else {
-					turnRight(delta);
+					stuckTurnRight(delta);
 				}
 				break;
 			case FORWARD_ACCE:
 			case BRAKE:
 			case REVERSE_ACCE:
-				if (angle != WorldSpatial.EAST_DEGREE_MIN
-						&& angle != WorldSpatial.WEST_DEGREE
-						&& angle != WorldSpatial.NORTH_DEGREE
-						&& angle != WorldSpatial.SOUTH_DEGREE) {
-					if (angle <= 45 && angle > 315) {
-						turnLeft(delta);
-					} else if (angle > 45 && angle <= 135) {
-						turnRight(delta);
-					} else if (angle > 135 && angle <= 270) {
-						turnLeft(delta);
-					} else {
-						turnRight(delta);
-					}
-				}else{
-					stuckTimer = 0;
-				}
+				stuckTurnRight(delta);
 				break;
 		}
-		applyReverseAcceleration();
 
-//		turnRight(delta);
-//		if(angle <= 45 && angle > 315){
-//			turnLeft(delta);
-//			currentOperation = OperationType.TURN_EAST;
-//		}else if( angle > 90 && angle <=180){
-//			currentOperation = OperationType.TURN_EAST;
-//			turnRight(delta);
-//		}else if(angle > 180 && angle <=270){
-//			turnLeft(delta);
-//		}else{
-//			turnRight(delta);
-//		}
+	}
+
+	private void stuckTurnRight(float delta){
+		if(stuckTimer % 2 ==0){
+			applyReverseAcceleration();
+			turnLeft(delta);
+		}else{
+			applyForwardAcceleration();
+			turnRight(delta);
+		}
+	}
+	private void stuckTurnLeft(float delta){
+		if(stuckTimer % 2 ==0){
+			applyReverseAcceleration();
+			turnRight(delta);
+		}else{
+			applyForwardAcceleration();
+			turnLeft(delta);
+		}
 	}
 
 	private void handleOperation(float delta) {
-		if (getSpeed() == 0) {
+		Coordinate co = new Coordinate(Math.round(this.getX()), Math.round(this.getY()));
+		if(mapRecorder.isHealth(co) && getHealth() < MAX_HEALTH){
+			applyBrake();
+			return ;
+		}else if (getSpeed() == 0) {
 			applyForwardAcceleration();
 		}
-		float angle = getAngle();
+
+		int angle =Math.round(getAngle());
 		switch (currentOperation) {
 			case TURN_EAST:
 				if (angle != WorldSpatial.EAST_DEGREE_MIN) {

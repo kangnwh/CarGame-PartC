@@ -41,30 +41,6 @@ public class Drive {
 
 		}
 
-
-//		/* if reaches a target position, a strategy should be applied to find next target position */
-//		if (Math.abs(targetPosition.x - car.getX()) <= COORDINATE_DEVIATION && Math.abs(targetPosition.y - car.getY()) <= COORDINATE_DEVIATION) {
-//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).
-//					getNextPosition(mapRecorder, car);
-//		}
-//
-//		/* health check interruptCheck */
-//		if (car.getHealth() <= HEALTH_THRESHOLD) {
-//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
-//			coordinatesInPath.clear();
-//		}
-//
-//		/* recorded check interruptCheck */
-//		if (mapRecorder.isRecorded(targetPosition)) {
-//			targetPosition = NextPositionFactory.chooseNextPositionStrategy(car, mapRecorder).getNextPosition(mapRecorder, car);
-//			coordinatesInPath.clear();
-//		}
-
-//		if (coordinatesInPath.size() == 0) {
-//			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
-//		}
-
-
 		if (nextPosition == null
 				|| (Math.abs(nextPosition.x - car.getX()) <= COORDINATE_DEVIATION
 				&& Math.abs(nextPosition.y - car.getY()) <= COORDINATE_DEVIATION)) {
@@ -86,16 +62,15 @@ public class Drive {
 			}
 		} catch (Exception e) {
 			MyAIController.logger.info(String.format("nextPosition:({%s})", nextPosition));
-			System.exit(-1);
+//			while(nextPosition!=null){
+//
+//			}
 		}
-
-//		if (mapRecorder.isLava(currentPosition)) {
-//			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition);
-//		}
 
 		return result;
 
 	}
+
 
 	/* in some special situations, the original navigation need to be interrupted for other strategy   */
 	private boolean interruptCheck(MapRecorder mapRecorder, CarController car) {
@@ -115,7 +90,7 @@ public class Drive {
 
 		/* health check interruptCheck */
 		if (car.getHealth() <= HEALTH_THRESHOLD) {
-			if (nextPositionStrategy instanceof HealPositionStrategy) {
+			if (nextPositionStrategy instanceof HealPositionStrategy && mapRecorder.isHealth(nextPosition)) {
 				return false;
 			}else{
 				return true;
@@ -143,7 +118,7 @@ public class Drive {
 
 	//TODO debug log print
 	private void printPathInfo() {
-		String log = String.format("Current:(%s) || Target:(%s) || ", nextPosition.toString(), targetPosition.toString());
+		String log = String.format("Current:(%s) || Target:(%s) || ", nextPosition, targetPosition);
 		for (Coordinate co : coordinatesInPath) {
 			log = log + "(" + co + ")" + ",";
 		}
