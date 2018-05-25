@@ -16,7 +16,7 @@ import world.Car;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
-    public static final float HEALTH_THRESHOLD = 30.0f;
+    public static final float HEALTH_THRESHOLD = 45.0f;
     private INextPositionStrategy explorePositionStrategy;
 
     public HealPositionStrategy() {

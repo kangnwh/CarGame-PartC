@@ -75,8 +75,9 @@ public class MyAIController extends CarController {
 			stuckTimer--;
 		} else {
 			handleOperation(delta);
-//			printLog(currentOperation.toString());
+
 		}
+//		printLog(currentOperation.toString());
 
 	}
 
@@ -86,28 +87,11 @@ public class MyAIController extends CarController {
 	 */
 	private boolean stuckCheck(){
 		/* stuck interrupt */
-		float angle = getAngle();
 		CarStatus newStatus = new CarStatus(this);
-		int targetDegree = 0;
 		if (lastStatus != null
 				&& lastStatus.equals(newStatus)
 				&& lastStatus.getHealth() >= this.getHealth()
 				) {
-//			switch (currentOperation) {
-//				case TURN_SOUTH:
-//					targetDegree = WorldSpatial.SOUTH_DEGREE;
-//					break;
-//				case TURN_NORTH:
-//					targetDegree = WorldSpatial.NORTH_DEGREE;
-//					break;
-//				case TURN_EAST:
-//					targetDegree = WorldSpatial.EAST_DEGREE_MIN;
-//					break;
-//				case TURN_WEST:
-//					targetDegree = WorldSpatial.WEST_DEGREE;
-//					break;
-//			}
-//			stuckTimer = STUCK_TIMER;
 			printLog("stucked !");
 			return true;
 		}
@@ -121,16 +105,7 @@ public class MyAIController extends CarController {
 	 * @param delta the time step
 	 */
 	private void solveStuck(float delta) {
-//		if(stuckTimer % 2 ==0){
-//			applyReverseAcceleration();
-//			turnLeft(delta);
-//		}else{
-//			applyForwardAcceleration();
-//			turnRight(delta);
-//		}
-//		applyReverseAcceleration();
 
-//		currentOperation = drive.getOperation(mapRecorder,this);
 		float angle = lastStatus.getAngle();
 
 		switch (currentOperation) {
@@ -172,34 +147,53 @@ public class MyAIController extends CarController {
 	}
 
 	private void stuckTurnRight(float delta){
-		int choice = stuckTimer % 4;
-		switch(choice){
-			case 0:
-			case 1:
-				applyReverseAcceleration();
-				turnLeft(delta);
-				break;
-			case 2:
-			case 3:
-				applyForwardAcceleration();
-				turnRight(delta);
-				break;
+		if(stuckTimer < STUCK_TIMER / 2){
+			applyForwardAcceleration();
+			turnRight(delta);
+		}else{
+			applyReverseAcceleration();
+			turnLeft(delta);
 		}
+//		int choice = stuckTimer % 6;
+//		switch(choice){
+//			case 0:
+//			case 1:
+//			case 2:
+//				applyReverseAcceleration();
+//				turnLeft(delta);
+//				break;
+//			case 3:
+//			case 4:
+//			case 5:
+//				applyForwardAcceleration();
+//				turnRight(delta);
+//				break;
+//		}
 	}
 	private void stuckTurnLeft(float delta){
-		int choice = stuckTimer % 4;
-		switch(choice){
-			case 0:
-			case 1:
-				applyReverseAcceleration();
-				turnRight(delta);
-				break;
-			case 2:
-			case 3:
-				applyForwardAcceleration();
-				turnLeft(delta);
-				break;
+		if(stuckTimer < STUCK_TIMER / 2){
+			applyForwardAcceleration();
+			turnLeft(delta);
+		}else{
+			applyReverseAcceleration();
+			turnRight(delta);
+
 		}
+//		int choice = stuckTimer % 6;
+//		switch(choice){
+//			case 0:
+//			case 1:
+//			case 2:
+//				applyReverseAcceleration();
+//				turnRight(delta);
+//				break;
+//			case 3:
+//			case 4:
+//			case 5:
+//				applyForwardAcceleration();
+//				turnLeft(delta);
+//				break;
+//		}
 	}
 
 	private void handleOperation(float delta) {
@@ -218,7 +212,6 @@ public class MyAIController extends CarController {
 					handleEast(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-//					handleOperation(delta);
 				}
 				break;
 			case TURN_WEST:
@@ -226,7 +219,6 @@ public class MyAIController extends CarController {
 					handleWest(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-//					handleOperation(delta);
 				}
 
 				break;
@@ -235,7 +227,6 @@ public class MyAIController extends CarController {
 					handleNorth(this.getOrientation(), delta);
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-//					handleOperation(delta);
 				}
 				break;
 			case TURN_SOUTH:
@@ -244,7 +235,6 @@ public class MyAIController extends CarController {
 
 				} else {
 					currentOperation = drive.getOperation(mapRecorder, this);
-//					handleOperation(delta);
 				}
 				break;
 			case BRAKE:

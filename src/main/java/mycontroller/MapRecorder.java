@@ -172,11 +172,13 @@ public class MapRecorder {
 		MapTile[][] tempMap = getMap();
 		int x = (int)car.getX();
 		int y = (int)car.getY();
+		tempMap[x][y] = new MapTile(MapTile.Type.WALL);
 		switch(car.getOrientation()){
 			//TODO useless !!!! WHY !!!
 			case SOUTH:
 				if(y+1 < yLength) tempMap[x][y+1] = new MapTile(MapTile.Type.WALL);
 				if(y+2 < yLength) tempMap[x][y+2] = new MapTile(MapTile.Type.WALL);
+
 				break;
 			case NORTH:
 				if(y-1 >= 0) tempMap[x][y-1] = new MapTile(MapTile.Type.WALL);

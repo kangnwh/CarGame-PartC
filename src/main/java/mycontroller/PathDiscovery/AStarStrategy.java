@@ -1,5 +1,6 @@
 package mycontroller.PathDiscovery;
 
+import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -11,9 +12,10 @@ import java.util.PriorityQueue;
 
 public class AStarStrategy implements IDiscoveryStrategy {
 
-	public final static int ROAD_VALUE = 10;
-	public final static int LAVA_VALUE = 40;
-	public final static int TURN_VALUE = 20;
+	public final static int ROAD_VALUE = 5;
+	public final static int LAVA_VALUE = 100000;
+	public final static int TURN_VALUE = 10;
+	public final static int HEALTH_VALUE = 0;
 
 	private PriorityQueue<Node> openList;
 	private ArrayList<Node> closeList;
@@ -29,6 +31,10 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 
 		this.current = new Node(current);
+		if(map[current.x][current.y] instanceof LavaTrap){
+			this.current.setG(LAVA_VALUE);
+		}
+
 		this.target = new Node(target);
 		openList.add(this.current);
 		moveNodes(map);
@@ -101,12 +107,17 @@ public class AStarStrategy implements IDiscoveryStrategy {
 			Coordinate coord = new Coordinate(x, y);
 			int cost = ROAD_VALUE;
 
-			if (map[x][y] instanceof LavaTrap) {
-				cost += LAVA_VALUE;
-			} else if (current.getParent().getCoordinate().x != x
+			if (current.getParent().getCoordinate().x != x
 					&& current.getParent().getCoordinate().y != y) {
 				cost += TURN_VALUE;
 			}
+
+			if (map[x][y] instanceof LavaTrap) {
+				cost *= LAVA_VALUE;
+			}else if (map[x][y] instanceof HealthTrap){
+				cost = HEALTH_VALUE;
+			}
+
 
 			int G = current.getG() + cost;
 			Node child = findNodeInOpen(coord);

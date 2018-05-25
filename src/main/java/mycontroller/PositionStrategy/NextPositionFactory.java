@@ -2,6 +2,7 @@ package mycontroller.PositionStrategy;
 
 import controller.CarController;
 import mycontroller.MapRecorder;
+import tiles.MapTile;
 
 import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOLD;
 
@@ -11,6 +12,8 @@ import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOL
  * if all keys are get, the car will go to the exit, else the car will explore the maze.
  */
 public class NextPositionFactory {
+
+
 
 	private static INextPositionStrategy healPositionStrategy = new HealPositionStrategy();
 	private static INextPositionStrategy keyPositionStrategy = new KeyPositionStrategy();

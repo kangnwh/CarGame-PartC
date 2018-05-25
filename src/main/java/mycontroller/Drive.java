@@ -10,7 +10,7 @@ import static mycontroller.MyAIController.MAX_HEALTH;
 import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOLD;
 
 public class Drive {
-
+	private static int EXIT_STEP_THREHOLD = 10;
 	private LinkedList<Coordinate> coordinatesInPath;
 	private Coordinate targetPosition;
 	private Coordinate nextPosition;
@@ -39,7 +39,7 @@ public class Drive {
 			targetPosition = nextPositionStrategy.getNextPosition(mapRecorder, car);
 			coordinatesInPath.clear();
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition,car);
-			printPathInfo();
+//			printPathInfo();
 
 		}
 
@@ -86,13 +86,17 @@ public class Drive {
 		}
 
 		/* recorded check interruptCheck */
-		if (mapRecorder.isRecorded(targetPosition) && (nextPositionStrategy instanceof ExplorePositionStrategy)) {
+		if ((mapRecorder.isRecorded(targetPosition) && !targetPosition.equals(mapRecorder.getExit()))
+				&& (nextPositionStrategy instanceof ExplorePositionStrategy)) {
 			return true;
 		}
 
 		/* health check interruptCheck */
-		if (car.getHealth() <= HEALTH_THRESHOLD) {
-			if (nextPositionStrategy instanceof HealPositionStrategy && mapRecorder.isHealth(nextPosition)) {
+		if (car.getHealth() <= HEALTH_THRESHOLD && mapRecorder.hasHealthTrap()) {
+			if(car.getKey() == 1 && Math.abs(mapRecorder.getExit().x-car.getX()) + Math.abs(mapRecorder.getExit().y-car.getY()) <=EXIT_STEP_THREHOLD) {
+				return false;
+			}
+			if ((nextPositionStrategy instanceof HealPositionStrategy) && mapRecorder.isHealth(targetPosition)) {
 				return false;
 			}else{
 				return true;
@@ -107,12 +111,6 @@ public class Drive {
 				return false;
 			}
 		}
-
-		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
-//		if (mapRecorder.isLava(currentPosition)) return true;
-
-
-
 
 		return false;
 
