@@ -2,7 +2,6 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PathDiscovery.AStarStrategy;
-import mycontroller.PathDiscovery.MyDiscoveryStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
@@ -20,14 +19,15 @@ import java.util.HashMap;
 public class MyAIController extends CarController {
 
 	public static Logger logger = LogManager.getFormatterLogger();
-	public static int MAX_HEALTH = 100;
-	public static int STUCK_TIMER = 10;
+	public static int MAX_HEALTH = 100; //The max health of car
+	public static int STUCK_TIMER = 10; //The times for car to do the operation when get stuck
 
 
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
 	private final float CAR_SPEED = 1.5f;
+	private final float CAR_SPEED = 2f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
 
@@ -43,13 +43,14 @@ public class MyAIController extends CarController {
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
 		drive = new Drive(co);
-		mapRecorder = new MapRecorder(new MyDiscoveryStrategy(), this.getMap());
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
 		//TODO for tesing
 //		mapRecorder = new MapRecorder(new TestDiscoveryStrategy(), this.getMap());
 //		drive = new Drive(new Coordinate(6,5));
 
 
+ 		drive = new Drive(co);
+		mapRecorder = new MapRecorder(new AStarStrategy(),this.getMap());
 		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
@@ -61,7 +62,7 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-
+		//if the car is stuck, reverse and turn right for 10 delta to readjust its orientation
 		if (stuckCheck() || stuckTimer > 0) {
 			solveStuck(delta);
 			stuckTimer--;
@@ -72,6 +73,12 @@ public class MyAIController extends CarController {
 		printLog(currentOperation.toString());
 	}
 
+	/**
+	 * Check if the car is stuck on the wall
+	 * @return true if the car get stuck on the wall
+	 */
+	private boolean stuckCheck(){
+
 	private boolean stuckCheck() {
 		/* stuck interrupt */
 		float angle = getAngle();
@@ -80,6 +87,8 @@ public class MyAIController extends CarController {
 				&& lastStatus.getAngle() == this.getAngle()
 				&& lastStatus.getX() == this.getX()
 				&& lastStatus.getY() == this.getY()
+				&& (lastStatus.getHealth() > this.getHealth()||(mapRecorder.isHealth(new Coordinate(this.getPosition())))&&lastStatus.getHealth() == this.getHealth())){
+			stuckTimer = STUCK_TIMER;
 				&& lastStatus.getHealth() > this.getHealth()
 				) {
 			switch (currentOperation) {
@@ -116,6 +125,11 @@ public class MyAIController extends CarController {
 		return false;
 	}
 
+
+	/**
+	 * Control the car's move according to the current operation
+	 * @param delta the time step
+	 */
 	private void solveStuck(float delta) {
 		currentOperation = drive.getOperation(mapRecorder,this);
 		float angle = lastStatus.getAngle();
@@ -258,6 +272,11 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Turn the orientation of the car to East
+	 * @param orientation the current orientation of car
+	 * @param delta the time step
+	 */
 	private void handleEast(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
 			case EAST:
@@ -286,6 +305,11 @@ public class MyAIController extends CarController {
 
 	}
 
+	/**
+	 * Turn the orientation of the car to West
+	 * @param orientation the current orientation of car
+	 * @param delta the time step
+	 */
 	private void handleWest(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
 			case EAST:
@@ -313,6 +337,11 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Turn the orientation of the car to North
+	 * @param orientation the current orientation of car
+	 * @param delta the time step
+	 */
 	private void handleNorth(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
 			case EAST:
@@ -340,6 +369,11 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Turn the orientation of the car to South
+	 * @param orientation the current orientation of car
+	 * @param delta the time step
+	 */
 	private void handleSouth(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
 			case EAST:

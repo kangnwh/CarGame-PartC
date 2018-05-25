@@ -35,6 +35,7 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		this.target = new Node(target);
 		openList.add(this.current);
 		moveNodes(map);
+
 		return revertList(pathList);
 
 	}
