@@ -5,6 +5,7 @@ import mycontroller.PathDiscovery.AStarStrategy;
 import mycontroller.PathDiscovery.MyDiscoveryStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
@@ -27,7 +28,7 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-	private final float CAR_SPEED = 1.5f;
+	private final float CAR_SPEED = 5f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
 
@@ -56,9 +57,16 @@ public class MyAIController extends CarController {
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
+
+
+		if(this.getHealth()<100&&mapRecorder.getMapMatrix().get(new Coordinate(this.getPosition())) instanceof HealthTrap){
+			applyBrake();
+		}
 		if(stuckCheck() || stuckTimer >0){
 			applyReverseAcceleration();
+			turnRight(delta);
 			stuckTimer--;
+
 		}else {
 			handleOperation(delta);
 			lastStatus = new CarStatus(this);
