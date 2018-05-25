@@ -2,7 +2,7 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PathDiscovery.AStarStrategy;
-import mycontroller.PathDiscovery.MyDiscoveryStrategy;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
