@@ -192,14 +192,6 @@ public class MapRecorder {
 				break;
 		}
 		return discoveryStrategy.findPath(current, target, tempMap);
-	/**
-	 * Find the path between two position
-	 * @param current the current position of the car
-	 * @param target the target position of the car
-	 * @return the path composed by the coordinate linkedList
-	 */
-	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target) {
-		return discoveryStrategy.findPath(current, target, getMap());
 	}
 
 	/**

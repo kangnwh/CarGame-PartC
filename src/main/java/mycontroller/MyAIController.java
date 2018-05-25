@@ -2,6 +2,7 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PathDiscovery.AStarStrategy;
+import mycontroller.PathDiscovery.MyDiscoveryStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tiles.MapTile;
@@ -27,7 +28,6 @@ public class MyAIController extends CarController {
 	private Drive drive;
 	private OperationType currentOperation;
 	private final float CAR_SPEED = 1.5f;
-	private final float CAR_SPEED = 2f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
 
@@ -43,6 +43,7 @@ public class MyAIController extends CarController {
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
 
 		drive = new Drive(co);
+//		mapRecorder = new MapRecorder(new MyDiscoveryStrategy(), this.getMap());
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
 		//TODO for tesing
 //		mapRecorder = new MapRecorder(new TestDiscoveryStrategy(), this.getMap());
@@ -78,8 +79,6 @@ public class MyAIController extends CarController {
 	 * @return true if the car get stuck on the wall
 	 */
 	private boolean stuckCheck(){
-
-	private boolean stuckCheck() {
 		/* stuck interrupt */
 		float angle = getAngle();
 		int targetDegree = 0;
@@ -87,9 +86,7 @@ public class MyAIController extends CarController {
 				&& lastStatus.getAngle() == this.getAngle()
 				&& lastStatus.getX() == this.getX()
 				&& lastStatus.getY() == this.getY()
-				&& (lastStatus.getHealth() > this.getHealth()||(mapRecorder.isHealth(new Coordinate(this.getPosition())))&&lastStatus.getHealth() == this.getHealth())){
-			stuckTimer = STUCK_TIMER;
-				&& lastStatus.getHealth() > this.getHealth()
+				&& lastStatus.getHealth() >= this.getHealth()
 				) {
 			switch (currentOperation) {
 				case TURN_SOUTH:
