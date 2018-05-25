@@ -28,7 +28,7 @@ public class MyAIController extends CarController {
 	private MapRecorder mapRecorder;
 	private Drive drive;
 	private OperationType currentOperation;
-	private final float CAR_SPEED = 5f;
+	private final float CAR_SPEED = 2f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
 
@@ -80,7 +80,7 @@ public class MyAIController extends CarController {
 				&& lastStatus.getAngle() == this.getAngle()
 				&& lastStatus.getX() == this.getX()
 				&& lastStatus.getY() == this.getY()
-				&& lastStatus.getHealth() > this.getHealth()){
+				&& (lastStatus.getHealth() > this.getHealth()||(mapRecorder.isHealth(new Coordinate(this.getPosition())))&&lastStatus.getHealth() == this.getHealth())){
 			stuckTimer = STUCK_TIMER;
 			return true;
 		}
