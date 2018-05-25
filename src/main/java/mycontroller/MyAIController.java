@@ -172,21 +172,33 @@ public class MyAIController extends CarController {
 	}
 
 	private void stuckTurnRight(float delta){
-		if(stuckTimer % 2 ==0){
-			applyReverseAcceleration();
-			turnLeft(delta);
-		}else{
-			applyForwardAcceleration();
-			turnRight(delta);
+		int choice = stuckTimer % 4;
+		switch(choice){
+			case 0:
+			case 1:
+				applyReverseAcceleration();
+				turnLeft(delta);
+				break;
+			case 2:
+			case 3:
+				applyForwardAcceleration();
+				turnRight(delta);
+				break;
 		}
 	}
 	private void stuckTurnLeft(float delta){
-		if(stuckTimer % 2 ==0){
-			applyReverseAcceleration();
-			turnRight(delta);
-		}else{
-			applyForwardAcceleration();
-			turnLeft(delta);
+		int choice = stuckTimer % 4;
+		switch(choice){
+			case 0:
+			case 1:
+				applyReverseAcceleration();
+				turnRight(delta);
+				break;
+			case 2:
+			case 3:
+				applyForwardAcceleration();
+				turnLeft(delta);
+				break;
 		}
 	}
 

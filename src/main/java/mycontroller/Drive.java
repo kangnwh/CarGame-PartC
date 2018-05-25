@@ -109,7 +109,7 @@ public class Drive {
 		}
 
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));
-		if (mapRecorder.isLava(currentPosition)) return true;
+//		if (mapRecorder.isLava(currentPosition)) return true;
 
 
 
