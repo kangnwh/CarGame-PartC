@@ -170,29 +170,9 @@ public class MapRecorder {
 	 */
 	public LinkedList<Coordinate> findPath(Coordinate current, Coordinate target, CarController car) {
 		MapTile[][] tempMap = getMap();
-		int x = (int)car.getX();
-		int y = (int)car.getY();
-		tempMap[x][y] = new MapTile(MapTile.Type.WALL);
-		switch(car.getOrientation()){
-			//TODO useless !!!! WHY !!!
-			case SOUTH:
-				if(y+1 < yLength) tempMap[x][y+1] = new MapTile(MapTile.Type.WALL);
-				if(y+2 < yLength) tempMap[x][y+2] = new MapTile(MapTile.Type.WALL);
-
-				break;
-			case NORTH:
-				if(y-1 >= 0) tempMap[x][y-1] = new MapTile(MapTile.Type.WALL);
-				if(y-2 >=0 ) tempMap[x][y-2] = new MapTile(MapTile.Type.WALL);
-				break;
-			case WEST:
-				if(x+1 < xLength) tempMap[x+1][y] = new MapTile(MapTile.Type.WALL);
-				if(x+2 < xLength ) tempMap[x+2][y] = new MapTile(MapTile.Type.WALL);
-				break;
-			case EAST:
-				if(x-1 >= 0) tempMap[x-1][y] = new MapTile(MapTile.Type.WALL);
-				if(x-2 >=0 ) tempMap[x-2][y] = new MapTile(MapTile.Type.WALL);
-				break;
-		}
+//		int x = (int)car.getX();
+//		int y = (int)car.getY();
+//		tempMap[x][y] = new MapTile(MapTile.Type.WALL);
 		return discoveryStrategy.findPath(current, target, tempMap);
 	}
 

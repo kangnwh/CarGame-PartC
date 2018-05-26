@@ -19,5 +19,5 @@ public interface INextPositionStrategy {
      * @param car from carController to get the current status of a car to judge where to go
      * @return the next position for the car to go
      */
-    public Coordinate getNextPosition(MapRecorder map, CarController car);
+    Coordinate getNextPosition(MapRecorder map, CarController car);
 }

@@ -144,64 +144,13 @@ public class Drive {
 
 	}
 
-	// handling the operation with different situations
-
-	private OperationType turn(CarController car, float currentX, float currentY, Coordinate next) {
-		int targetX = next.x;
-		int targetY = next.y;
-		switch (car.getOrientation()) {
-			case EAST:
-				if (currentX < targetX) {
-					if (currentY < targetY) {
-						return OperationType.TURN_NORTH;
-					}
-					return OperationType.TURN_SOUTH;
-				} else {
-					return OperationType.TURN_WEST;
-				}
-			case WEST:
-				if (currentX > targetX) {
-					if (currentY < targetY) {
-						return OperationType.TURN_NORTH;
-					}
-					return OperationType.TURN_SOUTH;
-				} else {
-					return OperationType.TURN_EAST;
-				}
-			case NORTH:
-				if (currentY < targetY) {
-					if (currentX > targetX) {
-						return OperationType.TURN_WEST;
-					}
-					return OperationType.TURN_EAST;
-				} else {
-					return OperationType.TURN_SOUTH;
-				}
-			case SOUTH:
-				if (currentY > targetY) {
-					if (currentX > targetX) {
-						return OperationType.TURN_WEST;
-					}
-					return OperationType.TURN_EAST;
-				} else if (currentX <= targetX) {
-					return OperationType.TURN_NORTH;
-				}
-				break;
-			default:
-				return OperationType.FORWARD_ACCE;
-		}
-
-		return null;
-	}
-
 	// Handling the move of horizontal
-
 	private OperationType moveX(CarController car, float currentX, Coordinate next) {
 		int targetX = next.x;
 		switch (car.getOrientation()) {
 			case EAST:
 				if (currentX > targetX) {
-					return OperationType.TURN_WEST;
+					return OperationType.REVERSE_ACCE;
 				} else if (currentX < targetX) {
 					return OperationType.FORWARD_ACCE;
 				}
@@ -210,7 +159,7 @@ public class Drive {
 				if (currentX > targetX) {
 					return OperationType.FORWARD_ACCE;
 				} else if (currentX < targetX) {
-					return OperationType.TURN_EAST;
+					return OperationType.REVERSE_ACCE;
 				}
 				break;
 			case NORTH:
@@ -231,7 +180,6 @@ public class Drive {
 	// Handling the move of vertical
 
 	private OperationType moveY(CarController car, float currentY, Coordinate next) {
-//		float currentY = currentY;
 		int nextY = next.y;
 		switch (car.getOrientation()) {
 			case EAST:
@@ -244,7 +192,7 @@ public class Drive {
 				break;
 			case NORTH:
 				if (currentY > nextY) {
-					return OperationType.TURN_SOUTH;
+					return OperationType.REVERSE_ACCE;
 				} else if (currentY < nextY) {
 					return OperationType.FORWARD_ACCE;
 				}
@@ -253,7 +201,7 @@ public class Drive {
 				if (currentY > nextY) {
 					return OperationType.FORWARD_ACCE;
 				} else if (currentY < nextY) {
-					return OperationType.TURN_NORTH;
+					return OperationType.REVERSE_ACCE;
 				}
 				break;
 			default:

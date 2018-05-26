@@ -19,7 +19,6 @@ import static mycontroller.PathDiscovery.AStarStrategy.LAVA_VALUE;
 
 public class HealPositionStrategy implements INextPositionStrategy {
     public static final float HEALTH_THRESHOLD = 40.0f;
-    public static final int HEALTH_LOSE_PER_LAVA = 10;
     private INextPositionStrategy explorePositionStrategy;
 
     public HealPositionStrategy() {

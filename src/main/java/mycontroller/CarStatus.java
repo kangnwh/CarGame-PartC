@@ -51,9 +51,9 @@ public class CarStatus {
 		CarStatus carStatus = (CarStatus) o;
 
 		if (Float.compare(carStatus.angle, angle) != 0) return false;
-		if (Float.compare(carStatus.x, x) != 0) return false;
-		if (Float.compare(carStatus.y, y) != 0) return false;
-		if (Float.compare(carStatus.speed, speed) != 0) return false;
+		if (Math.abs(carStatus.x - x) > 0.1) return false;
+		if (Math.abs(carStatus.y - y) > 0.1) return false;
+		if (Math.abs(carStatus.speed - speed) > 0.1) return false;
 
 		return true;
 	}

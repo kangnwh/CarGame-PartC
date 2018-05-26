@@ -56,16 +56,20 @@ public class MyAIController extends CarController {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
 
-		//if the car is stuck, reverse and turn right for 10 delta to readjust its orientation
+		// if the car is stuck, reverse and turn right for 10 delta to readjust its orientation
 
 		if (captuerTimer > 0) {
 			captuerTimer--;
+		} else if (lastStatus == null) {
+			captuerTimer = CAPTURE_INTERVAL;
+			lastStatus = new CarStatus(this);
+		} else {
+			captuerTimer = CAPTURE_INTERVAL;
 			if (stuckCheck()) {
 				stuckTimer = STUCK_TIMER;
+
 			}
-		} else {
-			lastStatus = new CarStatus(this);
-			captuerTimer = CAPTURE_INTERVAL;
+			lastStatus = null;
 		}
 
 		if (stuckTimer > 0) {
@@ -106,7 +110,8 @@ public class MyAIController extends CarController {
 	 */
 	private void solveStuck(float delta) {
 
-		float angle = lastStatus.getAngle();
+		float angle = getAngle();
+
 		switch (currentOperation) {
 			case TURN_WEST:
 				if (angle > 0 && angle <= 180) {
@@ -141,36 +146,47 @@ public class MyAIController extends CarController {
 				break;
 			case BRAKE:
 			case REVERSE_ACCE:
-				applyForwardAcceleration();
+				stuckForward(delta);
 				break;
 		}
 
 	}
 
-	private void stuckBackward(float delta){
-		if(stuckTimer > STUCK_TIMER / 2){
+	private void stuckBackward(float delta) {
+		printLog("slove stuck - backward");
+		if (stuckTimer > STUCK_TIMER / 2) {
 			applyReverseAcceleration();
-		}else{
+		} else {
+			turnLeft(delta);
+		}
+	}
+	private void stuckForward(float delta) {
+		printLog("slove stuck - backward");
+		if (stuckTimer > STUCK_TIMER / 2) {
+			applyForwardAcceleration();
+		} else {
 			turnLeft(delta);
 		}
 	}
 
-	private void stuckTurnRight(float delta){
-		if(stuckTimer < STUCK_TIMER / 2){
+	private void stuckTurnRight(float delta) {
+		printLog("slove stuck - right");
+		if (stuckTimer < STUCK_TIMER / 2) {
 			applyForwardAcceleration();
 			turnRight(delta);
-		}else{
+		} else {
 			applyReverseAcceleration();
 			turnLeft(delta);
 		}
 	}
 
 	private void stuckTurnLeft(float delta) {
+		printLog("slove stuck - left");
 
-		if(stuckTimer < STUCK_TIMER / 2){
+		if (stuckTimer < STUCK_TIMER / 2) {
 			applyForwardAcceleration();
 			turnLeft(delta);
-		}else{
+		} else {
 			applyReverseAcceleration();
 			turnRight(delta);
 
@@ -229,7 +245,9 @@ public class MyAIController extends CarController {
 				currentOperation = drive.getOperation(mapRecorder, this);
 				break;
 			case REVERSE_ACCE:
-				this.applyReverseAcceleration();
+				if (getSpeed() < CAR_SPEED) {
+					this.applyReverseAcceleration();
+				}
 				currentOperation = drive.getOperation(mapRecorder, this);
 				break;
 			default:
@@ -371,11 +389,4 @@ public class MyAIController extends CarController {
 		}
 	}
 
-	private void updateCarStatus() {
-		//TODO pending
-	}
-
-//	public MapRecorder getMapRecorder() {
-//		return mapRecorder;
-//	}
 }
