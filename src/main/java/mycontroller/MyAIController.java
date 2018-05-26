@@ -41,7 +41,6 @@ public class MyAIController extends CarController {
 	public MyAIController(Car car) {
 		super(car);
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
-
 		drive = new Drive(co);
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
 		captuerTimer = CAPTURE_INTERVAL;
@@ -51,6 +50,7 @@ public class MyAIController extends CarController {
 
 	@Override
 	public void update(float delta) {
+
 
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
@@ -73,6 +73,20 @@ public class MyAIController extends CarController {
 		if(stuckTimer > 0){
 			solveStuck(delta);
 			stuckTimer--;
+			System.out.println("stuck timer is " + stuckTimer);
+
+			if (stuckTimer <= 9) {
+				System.out.println("apply second");
+				solveStuckSecond(delta);
+				stuckTimer--;
+			}
+
+			if (stuckTimer <= 3){
+				System.out.println("apply third");
+				solveStuckThird(delta);
+				stuckTimer--;
+			}
+
 		} else {
 			handleOperation(delta);
 //			printLog(currentOperation.toString());
@@ -80,6 +94,16 @@ public class MyAIController extends CarController {
 
 	}
 
+	// TODO BOK
+	private void solveStuckSecond(float delta) {
+		applyReverseAcceleration();
+		turnLeft(delta * 5);
+	}
+
+	private void solveStuckThird(float delta){
+		applyReverseAcceleration();
+		turnRight(delta * 5);
+	}
 	/**
 	 * Check if the car is stuck on the wall
 	 * @return true if the car get stuck on the wall
@@ -89,6 +113,8 @@ public class MyAIController extends CarController {
 		float angle = getAngle();
 		CarStatus newStatus = new CarStatus(this);
 		int targetDegree = 0;
+
+
 		if (lastStatus != null
 				&& lastStatus.equals(newStatus)
 				&& lastStatus.getHealth() >= this.getHealth()
@@ -109,6 +135,10 @@ public class MyAIController extends CarController {
 //			}
 //			stuckTimer = STUCK_TIMER;
 			printLog("stucked !");
+
+
+
+
 			return true;
 		}
 
@@ -399,6 +429,12 @@ public class MyAIController extends CarController {
 	private void updateCarStatus() {
 		//TODO pending
 	}
+
+
+
+
+
+
 
 //	public MapRecorder getMapRecorder() {
 //		return mapRecorder;
