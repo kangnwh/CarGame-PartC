@@ -19,28 +19,7 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
 	public Coordinate getNextPosition(MapRecorder mapRecorder, CarController car) {
 
 
-//		int G = 0;//Integer.MAX_VALUE;
-//		int minG = ROAD_VALUE * 3;
-//		Coordinate target = null;
-//		Coordinate current = new Coordinate((int) car.getX(), (int) car.getY());
-//		MapTile[][] map = mapRecorder.getMap();
-//
-//		for (int i = 0; i < World.MAP_WIDTH; i++) {
-//			for (int j = 0; j < World.MAP_HEIGHT; j++) {
-//				if (map[i][j] == null || map[i][j].getType() == MapTile.Type.FINISH) {
-//					Coordinate temp = new Coordinate(i,j);
-//					mapRecorder.findPath(current,temp,car).size();
-//					int tempG = mapRecorder.getDiscoveryStrategyInstance().getCost();
-//					if(tempG > G){
-//						target = temp;
-//						G = tempG;
-//					}
-//				}
-//			}
-//		}
-
-		int G = Integer.MAX_VALUE;
-		int minG = ROAD_VALUE * 6;
+		int G = 0;//Integer.MAX_VALUE;
 		Coordinate target = null;
 		Coordinate current = new Coordinate((int) car.getX(), (int) car.getY());
 		MapTile[][] map = mapRecorder.getMap();
@@ -48,19 +27,39 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
 		for (int i = 0; i < World.MAP_WIDTH; i++) {
 			for (int j = 0; j < World.MAP_HEIGHT; j++) {
 				if (map[i][j] == null || map[i][j].getType() == MapTile.Type.FINISH) {
-					Coordinate temp = new Coordinate(i, j);
-					mapRecorder.findPath(current, temp, car).size();
+					Coordinate temp = new Coordinate(i,j);
+					mapRecorder.findPath(current,temp,car).size();
 					int tempG = mapRecorder.getDiscoveryStrategyInstance().getCost();
-					if (tempG < G) {
+					if(tempG > G){
 						target = temp;
 						G = tempG;
-						if(tempG == minG){
-							return target;
-						}
 					}
 				}
 			}
 		}
+
+//		int G = Integer.MAX_VALUE;
+//		int minG = 0;// ROAD_VALUE * 3;
+//		Coordinate target = null;
+//		Coordinate current = new Coordinate((int) car.getX(), (int) car.getY());
+//		MapTile[][] map = mapRecorder.getMap();
+//
+//		for (int i = 0; i < World.MAP_WIDTH; i++) {
+//			for (int j = 0; j < World.MAP_HEIGHT; j++) {
+//				if (map[i][j] == null || map[i][j].getType() == MapTile.Type.FINISH) {
+//					Coordinate temp = new Coordinate(i, j);
+//					mapRecorder.findPath(current, temp, car).size();
+//					int tempG = mapRecorder.getDiscoveryStrategyInstance().getCost();
+//					if (tempG < G) {
+//						target = temp;
+//						G = tempG;
+//						if(tempG == minG){
+//							return target;
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		MyAIController.printLog(String.format("Explorer Strategy:(%s)", target.toString()));
 		return target;
