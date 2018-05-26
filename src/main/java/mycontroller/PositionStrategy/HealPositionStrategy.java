@@ -45,8 +45,8 @@ public class HealPositionStrategy implements INextPositionStrategy {
             }
         }
         if(target == null ){
-            MyAIController.printLog("Explorer Strategy");
             target = this.explorePositionStrategy.getNextPosition(mapRecorder,car);
+            return target;
         }
         MyAIController.printLog("Heal Strategy");
         return target;

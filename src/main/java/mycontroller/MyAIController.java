@@ -11,6 +11,8 @@ import world.WorldSpatial;
 
 import java.util.HashMap;
 
+import static mycontroller.OperationType.FORWARD_ACCE;
+
 /**
  * Controller pattern applied here.
  * This class is responsible for coordinate data from all other classes and give final command to the car.
@@ -45,7 +47,7 @@ public class MyAIController extends CarController {
 		drive = new Drive(co);
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
 		captureTimer = CAPTURE_INTERVAL;
-		currentOperation = OperationType.FORWARD_ACCE;
+		currentOperation = FORWARD_ACCE;
 	}
 
 
@@ -111,39 +113,58 @@ public class MyAIController extends CarController {
 	private void solveStuck(float delta) {
 
 		Coordinate co = new Coordinate((int) this.getX(), (int) this.getY());
+
+		Coordinate upleft = new Coordinate((int) this.getX() - 1, (int) this.getY() + 1);
 		Coordinate left = new Coordinate((int) this.getX() - 1, (int) this.getY());
+		Coordinate downleft = new Coordinate((int) this.getX() - 1, (int) this.getY() - 1);
+
+		Coordinate upright = new Coordinate((int) this.getX() + 1, (int) this.getY() + 1);
 		Coordinate right = new Coordinate((int) this.getX() + 1, (int) this.getY());
+		Coordinate downright = new Coordinate((int) this.getX() + 1, (int) this.getY() - 1);
+
 		Coordinate up = new Coordinate((int) this.getX(), (int) this.getY() + 1);
 		Coordinate down = new Coordinate((int) this.getX() - 1, (int) this.getY() - 1);
 
 
 		float angle = getAngle();
 		HashMap<Coordinate,MapTile> currentMap = mapRecorder.getMapMatrix();
-		if(currentMap.get(left)!=null && currentMap.get(left).getType() != MapTile.Type.WALL){
+		if((currentMap.get(left)!=null && currentMap.get(left).getType() != MapTile.Type.WALL)
+				|| (currentMap.get(upleft)!=null && currentMap.get(upleft).getType() != MapTile.Type.WALL)
+				|| (currentMap.get(downleft)!=null && currentMap.get(downleft).getType() != MapTile.Type.WALL)){
 			if(angle > 180 && angle < 270) stuckTurnLeft(delta);
 			else if(angle < 180 && angle > 90) stuckTurnRight(delta);
-			else applyForwardAcceleration();
+			else if(currentOperation == FORWARD_ACCE) stuckBackward(delta);
+			else stuckForward(delta);
 			return ;
 		}
 
-		if(currentMap.get(right)!=null && currentMap.get(right).getType() != MapTile.Type.WALL){
+		if(currentMap.get(right)!=null && currentMap.get(right).getType() != MapTile.Type.WALL
+				|| (currentMap.get(upright)!=null && currentMap.get(upright).getType() != MapTile.Type.WALL)
+				|| (currentMap.get(downright)!=null && currentMap.get(downright).getType() != MapTile.Type.WALL)){
 			if(angle > 0 && angle < 90) stuckTurnLeft(delta);
 			else if(angle < 360 && angle > 270) stuckTurnRight(delta);
-			else applyForwardAcceleration();
+			else if(currentOperation == FORWARD_ACCE) stuckBackward(delta);
+			else stuckForward(delta);
 			return ;
 		}
 
-		if(currentMap.get(up)!=null && currentMap.get(up).getType() != MapTile.Type.WALL){
+		if(currentMap.get(up)!=null && currentMap.get(up).getType() != MapTile.Type.WALL
+				|| (currentMap.get(upright)!=null && currentMap.get(upright).getType() != MapTile.Type.WALL)
+				|| (currentMap.get(upleft)!=null && currentMap.get(upleft).getType() != MapTile.Type.WALL)){
 			if(angle > 90 && angle < 180) stuckTurnLeft(delta);
 			else if(angle < 90 && angle > 0) stuckTurnRight(delta);
-			else applyForwardAcceleration();
+			else if(currentOperation == FORWARD_ACCE) stuckBackward(delta);
+			else stuckForward(delta);
 			return ;
 		}
 
-		if(currentMap.get(down)!=null && currentMap.get(down).getType() != MapTile.Type.WALL){
+		if(currentMap.get(down)!=null && currentMap.get(down).getType() != MapTile.Type.WALL
+				|| (currentMap.get(downright)!=null && currentMap.get(downright).getType() != MapTile.Type.WALL)
+				|| (currentMap.get(downleft)!=null && currentMap.get(downleft).getType() != MapTile.Type.WALL)){
 			if(angle > 270 && angle < 360) stuckTurnLeft(delta);
 			else if(angle < 270 && angle > 180) stuckTurnRight(delta);
-			else applyForwardAcceleration();
+			else if(currentOperation == FORWARD_ACCE) stuckBackward(delta);
+			else stuckForward(delta);
 			return ;
 		}
 
@@ -193,11 +214,11 @@ public class MyAIController extends CarController {
 	 */
 	private void stuckBackward(float delta) {
 		printLog("solve stuck - backward");
-		if (stuckTimer > STUCK_TIMER / 2) {
+//		if (stuckTimer > STUCK_TIMER / 3) {
 			applyReverseAcceleration();
-		} else {
+//		} else {
 			turnLeft(delta);
-		}
+//		}
 	}
 
 	/**
@@ -206,11 +227,11 @@ public class MyAIController extends CarController {
 	 */
 	private void stuckForward(float delta) {
 		printLog("solve stuck - forward");
-		if (stuckTimer > STUCK_TIMER / 2) {
+//		if (stuckTimer > STUCK_TIMER / 3) {
 			applyForwardAcceleration();
-		} else {
+//		} else {
 			turnLeft(delta);
-		}
+//		}
 	}
 
 	/**
@@ -219,7 +240,7 @@ public class MyAIController extends CarController {
 	 */
 	private void stuckTurnRight(float delta) {
 		printLog("solve stuck - right");
-		if (stuckTimer < STUCK_TIMER / 2) {
+		if (stuckTimer < STUCK_TIMER / 3) {
 			applyForwardAcceleration();
 			turnRight(delta);
 		} else {
@@ -235,7 +256,7 @@ public class MyAIController extends CarController {
 	private void stuckTurnLeft(float delta) {
 		printLog("solve stuck - left");
 
-		if (stuckTimer < STUCK_TIMER / 2) {
+		if (stuckTimer < STUCK_TIMER / 3) {
 			applyForwardAcceleration();
 			turnLeft(delta);
 		} else {

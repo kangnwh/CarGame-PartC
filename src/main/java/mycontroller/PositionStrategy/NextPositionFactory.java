@@ -2,8 +2,12 @@ package mycontroller.PositionStrategy;
 
 import controller.CarController;
 import mycontroller.MapRecorder;
+import mycontroller.MyAIController;
 import tiles.MapTile;
+import utilities.Coordinate;
 
+import static mycontroller.MyAIController.MAX_HEALTH;
+import static mycontroller.PathDiscovery.AStarStrategy.LAVA_VALUE;
 import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOLD;
 
 /**
@@ -28,14 +32,30 @@ public class NextPositionFactory {
 	 * @return appropriate position strategy
 	 */
 	public static INextPositionStrategy chooseNextPositionStrategy(CarController car, MapRecorder mapRecorder) {
+		Coordinate target = null;
 		if (car.getHealth() < HEALTH_THRESHOLD && mapRecorder.hasHealthTrap()) {
-			return healPositionStrategy;
-		} else if (car.getKey() != 1 && mapRecorder.keyFounded(car.getKey() - 1)){
-			return keyPositionStrategy;
-		} else if (car.getKey() == 1) {
-			return exitPositionStrategy;
-		} else {
-			return explorePositionStrategy;
+			target = healPositionStrategy.getNextPosition(mapRecorder, car);
+			if (target != null
+					&& mapRecorder.getDiscoveryStrategyInstance().getCost() / LAVA_VALUE * 13 < car.getHealth()
+					&& mapRecorder.getDiscoveryStrategyInstance().getCost() / LAVA_VALUE * 13 < MAX_HEALTH - car.getHealth()) {
+				MyAIController.printLog("Heal Strategy");
+				return healPositionStrategy;
+			}
+
 		}
+
+		if (car.getKey() != 1 && mapRecorder.keyFounded(car.getKey() - 1)) {
+			MyAIController.printLog("Key Strategy");
+			return keyPositionStrategy;
+		}
+
+		if (car.getKey() == 1) {
+			MyAIController.printLog("Exit Strategy");
+			return exitPositionStrategy;
+		}
+
+		MyAIController.printLog("Explorer Strategy");
+		return explorePositionStrategy;
+
 	}
 }
