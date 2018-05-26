@@ -9,6 +9,13 @@ import java.util.LinkedList;
 import static mycontroller.MyAIController.MAX_HEALTH;
 import static mycontroller.PositionStrategy.HealPositionStrategy.HEALTH_THRESHOLD;
 
+/**
+ * Drive
+ * This is used to calculate which point should go to and the path how to go to that point. Then based on the status of the car and the next
+ * position in the calculated path, Drive provides an OPERATION to CarController so that CarController can control the car accordingly.
+ */
+
+
 public class Drive {
 	private static int EXIT_STEP_THREHOLD = 10;
 	private LinkedList<Coordinate> coordinatesInPath;
@@ -27,8 +34,13 @@ public class Drive {
 
 	}
 
-	// provide the operation for the next controller
 
+	/**
+	 * This
+	 * @param mapRecorder
+	 * @param car
+	 * @return
+	 */
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 
 		Coordinate currentPosition = new Coordinate(Math.round(car.getX()), Math.round(car.getY()));

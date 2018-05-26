@@ -10,12 +10,21 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 
+/**
+ * AStar algorithm
+ * This algorithm calculate a path from start point to end point based on a matric of cost.
+ * Each node in the map has a cost from start point.
+ * Check here for detail: https://github.com/mattantonelli/AStar
+ */
+
 public class AStarStrategy implements IDiscoveryStrategy {
 
+
+	/* cost of different type of maptile */
 	public final static int ROAD_VALUE = 5;
-	public final static int LAVA_VALUE = 100000;
-	public final static int TURN_VALUE = 10;
-	public final static int HEALTH_VALUE = 0;
+	private final static int LAVA_VALUE = 100000;
+	private final static int TURN_VALUE = 10;
+	private final static int HEALTH_VALUE = 0;
 
 	private PriorityQueue<Node> openList;
 	private ArrayList<Node> closeList;
@@ -43,12 +52,14 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 	}
 
+	/* revert the final list so that the very first point comes first */
 	private LinkedList<Coordinate> revertList(LinkedList<Coordinate> list) {
 		LinkedList<Coordinate> newList = new LinkedList<>();
 		for (Coordinate co : list) {
 			newList.addFirst(co);
 		}
 		try {
+			/* remove the current point and a potiental current point */
 			newList.removeFirst();
 			newList.removeFirst();
 		} catch (Exception e) {
@@ -65,6 +76,10 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		}
 	}
 
+	/**
+	 *  try to move find the path which cost least
+	 *
+	 */
 	private void moveNodes(MapTile[][] map) {
 		while (!openList.isEmpty()) {
 			if (isCoordinateInClose(target.getCoordinate())) {
@@ -78,7 +93,6 @@ public class AStarStrategy implements IDiscoveryStrategy {
 	}
 
 	private void drawPath(MapTile[][] maps) {
-
 		while (target != null) {
 			Coordinate c = target.getCoordinate();
 			pathList.add(c);

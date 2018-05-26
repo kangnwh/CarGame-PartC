@@ -12,6 +12,7 @@ import static mycontroller.PathDiscovery.AStarStrategy.ROAD_VALUE;
 /**
  * This strategy is used to find the next unknown position (a position that has not been recorded in MapRecorder).
  * This is used to make sure every "useful" coordinate can be discovered and recorded in MapRecorder.
+ * This strategy find the most nearest point that has a cost value > 3*ROAD_VALUE and has not been discovered
  */
 
 public class ExplorePositionStrategy implements INextPositionStrategy {
@@ -37,6 +38,7 @@ public class ExplorePositionStrategy implements INextPositionStrategy {
 //				}
 //			}
 //		}
+
 		int G = Integer.MAX_VALUE;
 		int minG = ROAD_VALUE * 6;
 		Coordinate target = null;
