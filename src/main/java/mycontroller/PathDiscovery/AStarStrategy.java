@@ -1,5 +1,6 @@
 package mycontroller.PathDiscovery;
 
+import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -9,11 +10,21 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 
+/**
+ * AStar algorithm
+ * This algorithm calculate a path from start point to end point based on a matric of cost.
+ * Each node in the map has a cost from start point.
+ * Check here for detail: https://github.com/mattantonelli/AStar
+ */
+
 public class AStarStrategy implements IDiscoveryStrategy {
 
-	public final static int ROAD_VALUE = 10;
-	public final static int LAVA_VALUE = 40;
-	public final static int TURN_VALUE = 20;
+
+	/* cost of different type of maptile */
+	public final static int ROAD_VALUE = 5;
+	private final static int LAVA_VALUE = 100000;
+	private final static int TURN_VALUE = 10;
+	private final static int HEALTH_VALUE = 0;
 
 	private PriorityQueue<Node> openList;
 	private ArrayList<Node> closeList;
@@ -29,6 +40,10 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 
 		this.current = new Node(current);
+		if(map[current.x][current.y] instanceof LavaTrap){
+			this.current.setG(LAVA_VALUE);
+		}
+
 		this.target = new Node(target);
 		openList.add(this.current);
 		moveNodes(map);
@@ -37,12 +52,14 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 	}
 
+	/* revert the final list so that the very first point comes first */
 	private LinkedList<Coordinate> revertList(LinkedList<Coordinate> list) {
 		LinkedList<Coordinate> newList = new LinkedList<>();
 		for (Coordinate co : list) {
 			newList.addFirst(co);
 		}
 		try {
+			/* remove the current point and a potiental current point */
 			newList.removeFirst();
 			newList.removeFirst();
 		} catch (Exception e) {
@@ -59,6 +76,10 @@ public class AStarStrategy implements IDiscoveryStrategy {
 		}
 	}
 
+	/**
+	 *  try to move find the path which cost least
+	 *
+	 */
 	private void moveNodes(MapTile[][] map) {
 		while (!openList.isEmpty()) {
 			if (isCoordinateInClose(target.getCoordinate())) {
@@ -72,7 +93,6 @@ public class AStarStrategy implements IDiscoveryStrategy {
 	}
 
 	private void drawPath(MapTile[][] maps) {
-
 		while (target != null) {
 			Coordinate c = target.getCoordinate();
 			pathList.add(c);
@@ -101,12 +121,17 @@ public class AStarStrategy implements IDiscoveryStrategy {
 			Coordinate coord = new Coordinate(x, y);
 			int cost = ROAD_VALUE;
 
-			if (map[x][y] instanceof LavaTrap) {
-				cost += LAVA_VALUE;
-			} else if (current.getParent().getCoordinate().x != x
+			if (current.getParent().getCoordinate().x != x
 					&& current.getParent().getCoordinate().y != y) {
 				cost += TURN_VALUE;
 			}
+
+			if (map[x][y] instanceof LavaTrap) {
+				cost *= LAVA_VALUE;
+			}else if (map[x][y] instanceof HealthTrap){
+				cost = HEALTH_VALUE;
+			}
+
 
 			int G = current.getG() + cost;
 			Node child = findNodeInOpen(coord);

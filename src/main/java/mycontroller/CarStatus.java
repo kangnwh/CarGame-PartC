@@ -4,7 +4,7 @@ import controller.CarController;
 
 /**
  * CarStatus
- * This is used to get the current status of a car
+ * This is used to get the snapshot of status of a car
  */
 
 public class CarStatus {

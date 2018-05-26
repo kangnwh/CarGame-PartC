@@ -41,6 +41,7 @@ public class MyAIController extends CarController {
 	public MyAIController(Car car) {
 		super(car);
 		Coordinate co = new Coordinate((int) car.getX(), (int) car.getY());
+
 		drive = new Drive(co);
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
 		captuerTimer = CAPTURE_INTERVAL;
@@ -50,8 +51,6 @@ public class MyAIController extends CarController {
 
 	@Override
 	public void update(float delta) {
-
-
 		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
 		mapRecorder.addPointsByCarView(currentView);
@@ -113,8 +112,6 @@ public class MyAIController extends CarController {
 		float angle = getAngle();
 		CarStatus newStatus = new CarStatus(this);
 		int targetDegree = 0;
-
-
 		if (lastStatus != null
 				&& lastStatus.equals(newStatus)
 				&& lastStatus.getHealth() >= this.getHealth()
@@ -135,10 +132,6 @@ public class MyAIController extends CarController {
 //			}
 //			stuckTimer = STUCK_TIMER;
 			printLog("stucked !");
-
-
-
-
 			return true;
 		}
 
@@ -429,12 +422,6 @@ public class MyAIController extends CarController {
 	private void updateCarStatus() {
 		//TODO pending
 	}
-
-
-
-
-
-
 
 //	public MapRecorder getMapRecorder() {
 //		return mapRecorder;
