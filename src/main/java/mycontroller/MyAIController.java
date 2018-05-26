@@ -73,18 +73,6 @@ public class MyAIController extends CarController {
 			solveStuck(delta);
 			stuckTimer--;
 			System.out.println("stuck timer is " + stuckTimer);
-            //Second method
-			if (stuckTimer <= 9) {
-				System.out.println("apply second");
-				solveStuckSecond(delta);
-				stuckTimer--;
-			}
-			// Third method
-			if (stuckTimer <= 3){
-				System.out.println("apply third");
-				solveStuckThird(delta);
-				stuckTimer--;
-			}
 
 		} else {
 			handleOperation(delta);
@@ -93,16 +81,6 @@ public class MyAIController extends CarController {
 
 	}
 
-	// TODO BOK
-	private void solveStuckSecond(float delta) {
-		applyReverseAcceleration();
-		turnLeft(delta * 5);
-	}
-
-	private void solveStuckThird(float delta){
-		applyReverseAcceleration();
-		turnRight(delta * 5);
-	}
 	/**
 	 * Check if the car is stuck on the wall
 	 * @return true if the car get stuck on the wall
@@ -204,7 +182,7 @@ public class MyAIController extends CarController {
 				break;
 			case 2:
 			case 3:
-				applyForwardAcceleration();
+//				applyForwardAcceleration();
 				turnRight(delta);
 				break;
 		}
@@ -219,7 +197,7 @@ public class MyAIController extends CarController {
 				break;
 			case 2:
 			case 3:
-				applyForwardAcceleration();
+//				applyForwardAcceleration();
 				turnLeft(delta);
 				break;
 		}
