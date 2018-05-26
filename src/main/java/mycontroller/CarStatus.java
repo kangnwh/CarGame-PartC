@@ -12,7 +12,7 @@ public class CarStatus {
 	private final float x;      //x coordinate of the car
 	private final float y;      //y coordinate of the car
 	private final float health; //health of the car
-	private final float speed;
+	private final float speed;  //speed of the car
 
 	public CarStatus(CarController carController) {
 		this.angle = carController.getAngle();
