@@ -110,45 +110,80 @@ public class MyAIController extends CarController {
 	 */
 	private void solveStuck(float delta) {
 
-		float angle = getAngle();
+		Coordinate co = new Coordinate((int) this.getX(), (int) this.getY());
+		Coordinate left = new Coordinate((int) this.getX() - 1, (int) this.getY());
+		Coordinate right = new Coordinate((int) this.getX() + 1, (int) this.getY());
+		Coordinate up = new Coordinate((int) this.getX(), (int) this.getY() + 1);
+		Coordinate down = new Coordinate((int) this.getX() - 1, (int) this.getY() - 1);
 
-		switch (currentOperation) {
-			case TURN_WEST:
-				if (angle > 0 && angle <= 180) {
-					stuckTurnLeft(delta);
-				} else {
-					stuckTurnRight(delta);
-				}
-				break;
-			case TURN_EAST:
-				if (angle > 0 && angle <= 180) {
-					stuckTurnRight(delta);
-				} else {
-					stuckTurnLeft(delta);
-				}
-				break;
-			case TURN_NORTH:
-				if (angle > 90 && angle <= 270) {
-					stuckTurnRight(delta);
-				} else {
-					stuckTurnLeft(delta);
-				}
-				break;
-			case TURN_SOUTH:
-				if (angle > 90 && angle <= 270) {
-					stuckTurnLeft(delta);
-				} else {
-					stuckTurnRight(delta);
-				}
-				break;
-			case FORWARD_ACCE:
-				stuckBackward(delta);
-				break;
-			case BRAKE:
-			case REVERSE_ACCE:
-				stuckForward(delta);
-				break;
+
+		float angle = getAngle();
+		HashMap<Coordinate,MapTile> currentMap = mapRecorder.getMapMatrix();
+		if(currentMap.get(left)!=null && currentMap.get(left).getType() != MapTile.Type.WALL){
+			if(angle > 180 && angle < 270) stuckTurnLeft(delta);
+			else if(angle < 180 && angle > 90) stuckTurnRight(delta);
+			else applyForwardAcceleration();
+			return ;
 		}
+
+		if(currentMap.get(right)!=null && currentMap.get(right).getType() != MapTile.Type.WALL){
+			if(angle > 0 && angle < 90) stuckTurnLeft(delta);
+			else if(angle < 360 && angle > 270) stuckTurnRight(delta);
+			else applyForwardAcceleration();
+			return ;
+		}
+
+		if(currentMap.get(up)!=null && currentMap.get(up).getType() != MapTile.Type.WALL){
+			if(angle > 90 && angle < 180) stuckTurnLeft(delta);
+			else if(angle < 90 && angle > 0) stuckTurnRight(delta);
+			else applyForwardAcceleration();
+			return ;
+		}
+
+		if(currentMap.get(down)!=null && currentMap.get(down).getType() != MapTile.Type.WALL){
+			if(angle > 270 && angle < 360) stuckTurnLeft(delta);
+			else if(angle < 270 && angle > 180) stuckTurnRight(delta);
+			else applyForwardAcceleration();
+			return ;
+		}
+
+//		switch (currentOperation) {
+//			case TURN_WEST:
+//				if (angle > 0 && angle <= 180) {
+//					stuckTurnLeft(delta);
+//				} else {
+//					stuckTurnRight(delta);
+//				}
+//				break;
+//			case TURN_EAST:
+//				if (angle > 0 && angle <= 180) {
+//					stuckTurnRight(delta);
+//				} else {
+//					stuckTurnLeft(delta);
+//				}
+//				break;
+//			case TURN_NORTH:
+//				if (angle > 90 && angle <= 270) {
+//					stuckTurnRight(delta);
+//				} else {
+//					stuckTurnLeft(delta);
+//				}
+//				break;
+//			case TURN_SOUTH:
+//				if (angle > 90 && angle <= 270) {
+//					stuckTurnLeft(delta);
+//				} else {
+//					stuckTurnRight(delta);
+//				}
+//				break;
+//			case FORWARD_ACCE:
+//				stuckBackward(delta);
+//				break;
+//			case BRAKE:
+//			case REVERSE_ACCE:
+//				stuckForward(delta);
+//				break;
+//		}
 
 	}
 
