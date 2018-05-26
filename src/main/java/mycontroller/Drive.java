@@ -37,10 +37,10 @@ public class Drive {
 
 
 	/**
-	 * This
+	 * This method provides the operation to carController to move the car to next position
 	 * @param mapRecorder
 	 * @param car
-	 * @return
+	 * @return operation for the car to move
 	 */
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
 
@@ -91,7 +91,12 @@ public class Drive {
 	}
 
 
-	/* in some special situations, the original navigation need to be interrupted for other strategy   */
+	/**
+	 * in some special situations, the original navigation need to be interrupted for other strategy
+	 * @param mapRecorder
+	 * @param car
+	 * @return true if the navigation should be interrupted
+	 */
 	private boolean interruptCheck(MapRecorder mapRecorder, CarController car) {
 
 		if (coordinatesInPath.size() == 0) return true;
@@ -133,8 +138,9 @@ public class Drive {
 
 	}
 
-	//TODO debug log print
-
+	/**
+	 * Print the path information
+	 */
 	private void printPathInfo() {
 		String log = String.format("Current:(%s) || Target:(%s) || ", nextPosition, targetPosition);
 		for (Coordinate co : coordinatesInPath) {
@@ -144,7 +150,14 @@ public class Drive {
 
 	}
 
-	// Handling the move of horizontal
+
+	/**
+	 * Handling the move of horizontal
+	 * @param car
+	 * @param currentX current X coordinate
+	 * @param next next Position to go
+	 * @return The operation for car to move
+	 */
 	private OperationType moveX(CarController car, float currentX, Coordinate next) {
 		int targetX = next.x;
 		switch (car.getOrientation()) {
@@ -177,8 +190,13 @@ public class Drive {
 		return null;
 	}
 
-	// Handling the move of vertical
-
+	/**
+	 * Handling the move of vertical
+	 * @param car
+	 * @param currentY current Y coordinate
+	 * @param next next Position to go
+	 * @return The operation for car to move
+	 */
 	private OperationType moveY(CarController car, float currentY, Coordinate next) {
 		int nextY = next.y;
 		switch (car.getOrientation()) {
