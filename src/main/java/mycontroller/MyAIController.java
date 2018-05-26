@@ -30,7 +30,7 @@ public class MyAIController extends CarController {
 	private final float CAR_SPEED = 1.5f;
 	private CarStatus lastStatus;
 	private int stuckTimer;
-	private int captuerTimer;
+	private int captureTimer;
 
 
 	public static void printLog(String msg) {
@@ -44,7 +44,7 @@ public class MyAIController extends CarController {
 
 		drive = new Drive(co);
 		mapRecorder = new MapRecorder(new AStarStrategy(), this.getMap());
-		captuerTimer = CAPTURE_INTERVAL;
+		captureTimer = CAPTURE_INTERVAL;
 		currentOperation = OperationType.FORWARD_ACCE;
 	}
 
@@ -58,13 +58,13 @@ public class MyAIController extends CarController {
 
 		// if the car is stuck, reverse and turn right for 10 delta to readjust its orientation
 
-		if (captuerTimer > 0) {
-			captuerTimer--;
+		if (captureTimer > 0) {
+			captureTimer--;
 		} else if (lastStatus == null) {
-			captuerTimer = CAPTURE_INTERVAL;
+			captureTimer = CAPTURE_INTERVAL;
 			lastStatus = new CarStatus(this);
 		} else {
-			captuerTimer = CAPTURE_INTERVAL;
+			captureTimer = CAPTURE_INTERVAL;
 			if (stuckCheck()) {
 				stuckTimer = STUCK_TIMER;
 
@@ -152,16 +152,25 @@ public class MyAIController extends CarController {
 
 	}
 
+	/**
+	 * Reverse to solve the stuck
+	 * @param delta time step
+	 */
 	private void stuckBackward(float delta) {
-		printLog("slove stuck - backward");
+		printLog("solve stuck - backward");
 		if (stuckTimer > STUCK_TIMER / 2) {
 			applyReverseAcceleration();
 		} else {
 			turnLeft(delta);
 		}
 	}
+
+	/**
+	 * Move forward to solve the stuck
+	 * @param delta time step
+	 */
 	private void stuckForward(float delta) {
-		printLog("slove stuck - backward");
+		printLog("solve stuck - forward");
 		if (stuckTimer > STUCK_TIMER / 2) {
 			applyForwardAcceleration();
 		} else {
@@ -169,8 +178,12 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Turn right to solve the stuck
+	 * @param delta time step
+	 */
 	private void stuckTurnRight(float delta) {
-		printLog("slove stuck - right");
+		printLog("solve stuck - right");
 		if (stuckTimer < STUCK_TIMER / 2) {
 			applyForwardAcceleration();
 			turnRight(delta);
@@ -180,8 +193,12 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Turn left to solve the stuck
+	 * @param delta time step
+	 */
 	private void stuckTurnLeft(float delta) {
-		printLog("slove stuck - left");
+		printLog("solve stuck - left");
 
 		if (stuckTimer < STUCK_TIMER / 2) {
 			applyForwardAcceleration();
@@ -193,6 +210,10 @@ public class MyAIController extends CarController {
 		}
 	}
 
+	/**
+	 * Move the car according to different operation
+	 * @param delta time step
+	 */
 	private void handleOperation(float delta) {
 		Coordinate co = new Coordinate(Math.round(this.getX()), Math.round(this.getY()));
 		if (mapRecorder.isHealth(co) && getHealth() < MAX_HEALTH) {
