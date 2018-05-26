@@ -20,7 +20,7 @@ public class MyAIController extends CarController {
 
 	public static Logger logger = LogManager.getFormatterLogger();
 	public static int MAX_HEALTH = 100; //The max health of car
-	public static int STUCK_TIMER = 20; //The times for car to do the operation when get stuck
+	public static int STUCK_TIMER = 30; //The times for car to do the operation when get stuck
 	public static int CAPTURE_INTERVAL = 15;// the interval to capture the car status for detecting stucking
 
 
@@ -75,7 +75,7 @@ public class MyAIController extends CarController {
 			handleOperation(delta);
 
 		}
-//		printLog(currentOperation.toString());
+		printLog(currentOperation.toString());
 
 	}
 
@@ -137,13 +137,22 @@ public class MyAIController extends CarController {
 				}
 				break;
 			case FORWARD_ACCE:
-				applyReverseAcceleration();
+				stuckBackward(delta);
+				break;
 			case BRAKE:
 			case REVERSE_ACCE:
 				applyForwardAcceleration();
 				break;
 		}
 
+	}
+
+	private void stuckBackward(float delta){
+		if(stuckTimer > STUCK_TIMER / 2){
+			applyReverseAcceleration();
+		}else{
+			turnLeft(delta);
+		}
 	}
 
 	private void stuckTurnRight(float delta){
@@ -154,26 +163,10 @@ public class MyAIController extends CarController {
 			applyReverseAcceleration();
 			turnLeft(delta);
 		}
-//		int choice = stuckTimer % 6;
-//		switch(choice){
-//			case 0:
-//			case 1:
-//			case 2:
-//				applyReverseAcceleration();
-//				turnLeft(delta);
-//				break;
-//			case 3:
-//			case 4:
-//			case 5:
-//				applyForwardAcceleration();
-//				turnRight(delta);
-//				break;
-//		}
 	}
 
 	private void stuckTurnLeft(float delta) {
-//		applyReverseAcceleration();
-//		turnRight(delta);
+
 		if(stuckTimer < STUCK_TIMER / 2){
 			applyForwardAcceleration();
 			turnLeft(delta);
@@ -182,21 +175,6 @@ public class MyAIController extends CarController {
 			turnRight(delta);
 
 		}
-//		int choice = stuckTimer % 6;
-//		switch(choice){
-//			case 0:
-//			case 1:
-//			case 2:
-//				applyReverseAcceleration();
-//				turnRight(delta);
-//				break;
-//			case 3:
-//			case 4:
-//			case 5:
-//				applyForwardAcceleration();
-//				turnLeft(delta);
-//				break;
-//		}
 	}
 
 	private void handleOperation(float delta) {
