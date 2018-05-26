@@ -38,8 +38,8 @@ public class Drive {
 
 	/**
 	 * This method provides the operation to carController to move the car to next position
-	 * @param mapRecorder
-	 * @param car
+	 * @param mapRecorder the map
+	 * @param car aiController
 	 * @return operation for the car to move
 	 */
 	public OperationType getOperation(MapRecorder mapRecorder, CarController car) {
@@ -93,8 +93,8 @@ public class Drive {
 
 	/**
 	 * in some special situations, the original navigation need to be interrupted for other strategy
-	 * @param mapRecorder
-	 * @param car
+	 * @param mapRecorder the map
+	 * @param car aiController
 	 * @return true if the navigation should be interrupted
 	 */
 	private boolean interruptCheck(MapRecorder mapRecorder, CarController car) {
@@ -153,7 +153,7 @@ public class Drive {
 
 	/**
 	 * Handling the move of horizontal
-	 * @param car
+	 * @param car aiController
 	 * @param currentX current X coordinate
 	 * @param next next Position to go
 	 * @return The operation for car to move
@@ -192,7 +192,7 @@ public class Drive {
 
 	/**
 	 * Handling the move of vertical
-	 * @param car
+	 * @param car aiController
 	 * @param currentY current Y coordinate
 	 * @param next next Position to go
 	 * @return The operation for car to move
