@@ -2,6 +2,7 @@ package mycontroller;
 
 import controller.CarController;
 import mycontroller.PositionStrategy.*;
+import tiles.MapTile;
 import utilities.Coordinate;
 
 import java.util.LinkedList;
@@ -76,9 +77,13 @@ public class Drive {
 			}
 		} catch (Exception e) {
 			MyAIController.logger.info(String.format("nextPosition:({%s})", nextPosition));
-//			while(nextPosition!=null){
-//
-//			}
+
+			while(nextPosition == null){
+				mapRecorder.addPoint(targetPosition, new MapTile(MapTile.Type.ROAD));
+				targetPosition = nextPositionStrategy.getNextPosition(mapRecorder,car);
+				coordinatesInPath = mapRecorder.findPath(currentPosition,targetPosition,car);
+				nextPosition = coordinatesInPath.poll();
+			}
 		}
 
 		return result;
