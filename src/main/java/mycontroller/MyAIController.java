@@ -73,13 +73,13 @@ public class MyAIController extends CarController {
 			solveStuck(delta);
 			stuckTimer--;
 			System.out.println("stuck timer is " + stuckTimer);
-
+            //Second method
 			if (stuckTimer <= 9) {
 				System.out.println("apply second");
 				solveStuckSecond(delta);
 				stuckTimer--;
 			}
-
+			// Third method
 			if (stuckTimer <= 3){
 				System.out.println("apply third");
 				solveStuckThird(delta);
