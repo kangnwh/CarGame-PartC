@@ -62,15 +62,13 @@ public class MyAIController extends CarController {
 			captuerTimer--;
 			if (stuckCheck()) {
 				stuckTimer = STUCK_TIMER;
-//				drive.skipThisPosition();
-//				currentOperation = drive.getOperation(mapRecorder, this);
 			}
-		}else{
+		} else {
 			lastStatus = new CarStatus(this);
 			captuerTimer = CAPTURE_INTERVAL;
 		}
 
-		if(stuckTimer > 0){
+		if (stuckTimer > 0) {
 			solveStuck(delta);
 			stuckTimer--;
 		} else {
@@ -83,9 +81,10 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Check if the car is stuck on the wall
+	 *
 	 * @return true if the car get stuck on the wall
 	 */
-	private boolean stuckCheck(){
+	private boolean stuckCheck() {
 		/* stuck interrupt */
 		CarStatus newStatus = new CarStatus(this);
 		if (lastStatus != null
@@ -102,45 +101,46 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Control the car's move according to the current operation
+	 *
 	 * @param delta the time step
 	 */
 	private void solveStuck(float delta) {
 
 		float angle = lastStatus.getAngle();
-
 		switch (currentOperation) {
 			case TURN_WEST:
-				if (angle > 0 || angle <= 180) {
+				if (angle > 0 && angle <= 180) {
 					stuckTurnLeft(delta);
 				} else {
 					stuckTurnRight(delta);
 				}
 				break;
 			case TURN_EAST:
-				if (angle > 0 || angle <= 180) {
+				if (angle > 0 && angle <= 180) {
 					stuckTurnRight(delta);
 				} else {
 					stuckTurnLeft(delta);
 				}
 				break;
 			case TURN_NORTH:
-				if (angle > 90 || angle <= 270) {
+				if (angle > 90 && angle <= 270) {
 					stuckTurnRight(delta);
 				} else {
 					stuckTurnLeft(delta);
 				}
 				break;
 			case TURN_SOUTH:
-				if (angle > 90 || angle <= 270) {
+				if (angle > 90 && angle <= 270) {
 					stuckTurnLeft(delta);
 				} else {
 					stuckTurnRight(delta);
 				}
 				break;
 			case FORWARD_ACCE:
+				applyReverseAcceleration();
 			case BRAKE:
 			case REVERSE_ACCE:
-				stuckTurnRight(delta);
+				applyForwardAcceleration();
 				break;
 		}
 
@@ -170,7 +170,10 @@ public class MyAIController extends CarController {
 //				break;
 //		}
 	}
-	private void stuckTurnLeft(float delta){
+
+	private void stuckTurnLeft(float delta) {
+//		applyReverseAcceleration();
+//		turnRight(delta);
 		if(stuckTimer < STUCK_TIMER / 2){
 			applyForwardAcceleration();
 			turnLeft(delta);
@@ -198,14 +201,14 @@ public class MyAIController extends CarController {
 
 	private void handleOperation(float delta) {
 		Coordinate co = new Coordinate(Math.round(this.getX()), Math.round(this.getY()));
-		if(mapRecorder.isHealth(co) && getHealth() < MAX_HEALTH){
+		if (mapRecorder.isHealth(co) && getHealth() < MAX_HEALTH) {
 			applyBrake();
-			return ;
-		}else if (getSpeed() == 0) {
+			return;
+		} else if (getSpeed() == 0) {
 			applyForwardAcceleration();
 		}
 
-		int angle =Math.round(getAngle());
+		int angle = Math.round(getAngle());
 		switch (currentOperation) {
 			case TURN_EAST:
 				if (angle != WorldSpatial.EAST_DEGREE_MIN) {
@@ -259,8 +262,9 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Turn the orientation of the car to East
+	 *
 	 * @param orientation the current orientation of car
-	 * @param delta the time step
+	 * @param delta       the time step
 	 */
 	private void handleEast(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
@@ -292,8 +296,9 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Turn the orientation of the car to West
+	 *
 	 * @param orientation the current orientation of car
-	 * @param delta the time step
+	 * @param delta       the time step
 	 */
 	private void handleWest(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
@@ -315,7 +320,7 @@ public class MyAIController extends CarController {
 			case WEST:
 				if (getAngle() > WorldSpatial.WEST_DEGREE) {
 					turnRight(delta);
-				}else if(getAngle() < WorldSpatial.WEST_DEGREE){
+				} else if (getAngle() < WorldSpatial.WEST_DEGREE) {
 					turnLeft(delta);
 				}
 				break;
@@ -324,8 +329,9 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Turn the orientation of the car to North
+	 *
 	 * @param orientation the current orientation of car
-	 * @param delta the time step
+	 * @param delta       the time step
 	 */
 	private void handleNorth(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
@@ -337,7 +343,7 @@ public class MyAIController extends CarController {
 			case NORTH:
 				if (getAngle() > WorldSpatial.NORTH_DEGREE) {
 					turnRight(delta);
-				}else if(getAngle() < WorldSpatial.NORTH_DEGREE){
+				} else if (getAngle() < WorldSpatial.NORTH_DEGREE) {
 					turnLeft(delta);
 				}
 				break;
@@ -356,8 +362,9 @@ public class MyAIController extends CarController {
 
 	/**
 	 * Turn the orientation of the car to South
+	 *
 	 * @param orientation the current orientation of car
-	 * @param delta the time step
+	 * @param delta       the time step
 	 */
 	private void handleSouth(WorldSpatial.Direction orientation, float delta) {
 		switch (orientation) {
@@ -374,7 +381,7 @@ public class MyAIController extends CarController {
 			case SOUTH:
 				if (getAngle() > WorldSpatial.SOUTH_DEGREE) {
 					turnRight(delta);
-				}else if(getAngle() < WorldSpatial.SOUTH_DEGREE){
+				} else if (getAngle() < WorldSpatial.SOUTH_DEGREE) {
 					turnLeft(delta);
 				}
 				break;

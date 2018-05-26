@@ -52,7 +52,7 @@ public class Drive {
 			targetPosition = nextPositionStrategy.getNextPosition(mapRecorder, car);
 			coordinatesInPath.clear();
 			coordinatesInPath = mapRecorder.findPath(currentPosition, targetPosition,car);
-//			printPathInfo();
+			printPathInfo();
 
 		}
 

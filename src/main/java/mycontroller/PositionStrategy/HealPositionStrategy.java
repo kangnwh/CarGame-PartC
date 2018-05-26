@@ -9,6 +9,8 @@ import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
 
+import static mycontroller.PathDiscovery.AStarStrategy.LAVA_VALUE;
+
 /**
  * This strategy is to assign the next position to be a heal coordinate.
  * This is used when the algorithm realise the car's health point is not enough.
@@ -16,7 +18,8 @@ import world.Car;
  */
 
 public class HealPositionStrategy implements INextPositionStrategy {
-    public static final float HEALTH_THRESHOLD = 45.0f;
+    public static final float HEALTH_THRESHOLD = 40.0f;
+    public static final int HEALTH_LOSE_PER_LAVA = 10;
     private INextPositionStrategy explorePositionStrategy;
 
     public HealPositionStrategy() {
@@ -42,7 +45,7 @@ public class HealPositionStrategy implements INextPositionStrategy {
                 }
             }
         }
-        if(target == null){
+        if(target == null ){
             MyAIController.printLog("Explorer Strategy");
             target = this.explorePositionStrategy.getNextPosition(mapRecorder,car);
         }

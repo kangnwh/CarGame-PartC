@@ -22,7 +22,7 @@ public class AStarStrategy implements IDiscoveryStrategy {
 
 	/* cost of different type of maptile */
 	public final static int ROAD_VALUE = 5;
-	private final static int LAVA_VALUE = 100000;
+	public final static int LAVA_VALUE = 100000;
 	private final static int TURN_VALUE = 10;
 	private final static int HEALTH_VALUE = 0;
 
