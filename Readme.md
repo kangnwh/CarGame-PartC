@@ -100,9 +100,9 @@ All in all, our implementation is based on our modelling andpattern design, and 
 
   
 ## Contributors:
-Eric Kang
-Tony Gu
-Bok Mo
+- Eric Kang
+- Tony Gu
+- Bok Mo
  
 
  
